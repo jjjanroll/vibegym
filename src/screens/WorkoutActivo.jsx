@@ -57,110 +57,6 @@ function formatAnterior(peso, reps) {
   return `× ${reps}`
 }
 
-// ── SwipeableSetRow ───────────────────────────────────────────────────────
-// Swipe izquierda → eliminar (rojo), swipe derecha → completar/descompletar (verde)
-
-function SwipeableSetRow({ onDelete, onToggle, completada, children }) {
-  const [offsetX, setOffsetX] = useState(0)
-  const [dragging, setDragging] = useState(false)
-  const startX = useRef(0)
-  const startY = useRef(0)
-  const axis = useRef(null) // 'h' | 'v' | null — fijado en el primer movimiento
-
-  const THRESHOLD = 76
-
-  function onTouchStart(e) {
-    startX.current = e.touches[0].clientX
-    startY.current = e.touches[0].clientY
-    axis.current = null
-    setDragging(true)
-  }
-
-  function onTouchMove(e) {
-    if (!dragging) return
-    const dx = e.touches[0].clientX - startX.current
-    const dy = e.touches[0].clientY - startY.current
-
-    // Fijar eje en el primer movimiento para no competir con scroll vertical
-    if (axis.current === null) {
-      if (Math.abs(dx) > Math.abs(dy) + 4) axis.current = 'h'
-      else { axis.current = 'v'; return }
-    }
-    if (axis.current !== 'h') return
-
-    e.preventDefault()
-    // Limitar desplazamiento: izquierda hasta -120, derecha hasta +100
-    setOffsetX(Math.max(-120, Math.min(100, dx)))
-  }
-
-  function onTouchEnd() {
-    setDragging(false)
-    if (axis.current !== 'h') return
-
-    if (offsetX < -THRESHOLD) {
-      // Animar fuera y luego eliminar
-      setOffsetX(-500)
-      setTimeout(onDelete, 220)
-    } else if (offsetX > THRESHOLD) {
-      onToggle()
-      setOffsetX(0)
-    } else {
-      setOffsetX(0)
-    }
-  }
-
-  const progress = Math.min(1, Math.abs(offsetX) / THRESHOLD)
-  const showLeft = offsetX > 12    // revela fondo verde (completar)
-  const showRight = offsetX < -12  // revela fondo rojo (eliminar)
-
-  return (
-    <div className="relative overflow-hidden">
-      {/* Fondo izquierdo — completar (verde) */}
-      <div
-        className="absolute inset-y-0 left-0 w-full flex items-center px-5 bg-[#30D158]"
-        style={{ opacity: showLeft ? Math.min(1, progress * 1.5) : 0 }}
-      >
-        <svg viewBox="0 0 24 24" fill="none" strokeWidth="3" stroke="#000"
-             strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        <span className="text-black font-bold text-sm ml-2">
-          {completada ? 'Desmarcar' : 'Completar'}
-        </span>
-      </div>
-
-      {/* Fondo derecho — eliminar (rojo) */}
-      <div
-        className="absolute inset-y-0 right-0 w-full flex items-center justify-end px-5 bg-[#FF3B30]"
-        style={{ opacity: showRight ? Math.min(1, progress * 1.5) : 0 }}
-      >
-        <span className="text-white font-bold text-sm mr-2">Eliminar</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"
-             strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-          <polyline points="3 6 5 6 21 6"/>
-          <path d="M19 6l-1 14H6L5 6"/>
-          <path d="M10 11v6M14 11v6"/>
-          <path d="M9 6V4h6v2"/>
-        </svg>
-      </div>
-
-      {/* Fila deslizable */}
-      <div
-        style={{
-          transform: `translateX(${offsetX}px)`,
-          transition: dragging ? 'none' : 'transform 0.25s ease',
-          willChange: 'transform',
-        }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        {children}
-      </div>
-    </div>
-  )
-}
-
 // ── Componente ────────────────────────────────────────────────────────────
 
 export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
@@ -171,7 +67,10 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
   // timer: null = inactivo | { exerciseIdx, setIdx, segundos }
   const [timer, setTimer] = useState(null)
   const [timerDefault, setTimerDefault] = useState(TIMER_DEFAULT_FALLBACK)
+  const [longPressSet, setLongPressSet] = useState(null) // { iIdx, sIdx } | null
   const inicioRef = useRef(Date.now())
+  const longPressTimerRef = useRef(null)
+  const dismissTimerRef = useRef(null)
 
   // Leer timer configurado por el usuario
   useEffect(() => {
@@ -264,6 +163,27 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
       ...it,
       sets: it.sets.filter((_, j) => j !== sIdx).map((s, j) => ({ ...s, orden: j + 1 })),
     }))
+  }
+
+  function iniciarLongPress(iIdx, sIdx) {
+    clearTimeout(longPressTimerRef.current)
+    clearTimeout(dismissTimerRef.current)
+    longPressTimerRef.current = setTimeout(() => {
+      navigator.vibrate?.(40)
+      setLongPressSet({ iIdx, sIdx })
+      // Auto-dismiss a los 3 segundos si no se confirma
+      dismissTimerRef.current = setTimeout(() => setLongPressSet(null), 3000)
+    }, 500)
+  }
+
+  function cancelarLongPress() {
+    clearTimeout(longPressTimerRef.current)
+  }
+
+  function confirmarEliminar(iIdx, sIdx) {
+    clearTimeout(dismissTimerRef.current)
+    setLongPressSet(null)
+    eliminarSerie(iIdx, sIdx)
   }
 
   function actualizarValor(iIdx, sIdx, campo, valor) {
@@ -463,17 +383,22 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
                 const valor1 = esCardio ? (set.tiempo ?? '') : set.peso
                 const valor2 = esCardio ? (set.distancia ?? '') : set.reps
 
+                const enModoEliminar = longPressSet?.iIdx === iIdx && longPressSet?.sIdx === sIdx
+
                 return (
                   <div key={set.id}>
-                    <SwipeableSetRow
-                      completada={set.completada}
-                      onToggle={() => toggleSerie(iIdx, sIdx)}
-                      onDelete={() => eliminarSerie(iIdx, sIdx)}
-                    >
                     <div
-                      className={`flex items-center px-3 py-2 gap-2 border-t border-[#38383A] ${
-                        set.completada ? 'bg-[#30D158]/10' : 'bg-[#1C1C1E]'
+                      className={`flex items-center px-3 py-2 gap-2 border-t border-[#38383A] transition-colors ${
+                        enModoEliminar
+                          ? 'bg-[#FF3B30]/15'
+                          : set.completada ? 'bg-[#30D158]/10' : ''
                       }`}
+                      onTouchStart={() => iniciarLongPress(iIdx, sIdx)}
+                      onTouchEnd={cancelarLongPress}
+                      onTouchMove={cancelarLongPress}
+                      onMouseDown={() => iniciarLongPress(iIdx, sIdx)}
+                      onMouseUp={cancelarLongPress}
+                      onMouseLeave={cancelarLongPress}
                     >
                       <span className="w-5 text-center text-[#8E8E93] text-sm shrink-0">{sIdx + 1}</span>
 
@@ -509,23 +434,37 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
                         }`}
                       />
 
-                      <button
-                        onClick={() => toggleSerie(iIdx, sIdx)}
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 active:scale-95 transition-all ${
-                          set.completada
-                            ? 'bg-[#30D158]'
-                            : 'bg-[#1A3D27] border border-[#30D158]'
-                        }`}
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" strokeWidth="3"
-                             stroke={set.completada ? '#000' : '#30D158'}
-                             strokeLinecap="round" strokeLinejoin="round"
-                             width="16" height="16">
-                          <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                      </button>
+                      {enModoEliminar ? (
+                        <button
+                          onClick={() => confirmarEliminar(iIdx, sIdx)}
+                          className="w-auto px-3 h-10 rounded-xl flex items-center gap-1.5 shrink-0 bg-[#FF3B30] active:opacity-80"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"
+                               strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6l-1 14H6L5 6"/>
+                            <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
+                          </svg>
+                          <span className="text-white font-bold text-xs">Eliminar</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => toggleSerie(iIdx, sIdx)}
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 active:scale-95 transition-all ${
+                            set.completada
+                              ? 'bg-[#30D158]'
+                              : 'bg-[#1A3D27] border border-[#30D158]'
+                          }`}
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" strokeWidth="3"
+                               stroke={set.completada ? '#000' : '#30D158'}
+                               strokeLinecap="round" strokeLinejoin="round"
+                               width="16" height="16">
+                            <polyline points="20 6 9 17 4 12"/>
+                          </svg>
+                        </button>
+                      )}
                     </div>
-                    </SwipeableSetRow>
 
                     {/* Timer inline — aparece justo debajo de esta serie si fue la última completada */}
                     {timerEnEstaSerie && (
