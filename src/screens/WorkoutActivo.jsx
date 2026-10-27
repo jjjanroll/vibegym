@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { saveWorkout, saveWorkoutExercise, saveSet, deleteWorkoutCompleto, getLastSetsForExercise, getUser } from '../db'
+import { saveWorkout, saveWorkoutExercise, saveSet, deleteSet, deleteWorkoutCompleto, getLastSetsForExercise, getUser } from '../db'
 import DumbbellIcon from '../components/DumbbellIcon'
 import SelectorEjercicios from './SelectorEjercicios'
 
@@ -55,6 +55,110 @@ function formatAnterior(peso, reps) {
   if (peso && reps) return `${peso}kg × ${reps}`
   if (peso) return `${peso}kg`
   return `× ${reps}`
+}
+
+// ── SwipeableSetRow ───────────────────────────────────────────────────────
+// Swipe izquierda → eliminar (rojo), swipe derecha → completar/descompletar (verde)
+
+function SwipeableSetRow({ onDelete, onToggle, completada, children }) {
+  const [offsetX, setOffsetX] = useState(0)
+  const [dragging, setDragging] = useState(false)
+  const startX = useRef(0)
+  const startY = useRef(0)
+  const axis = useRef(null) // 'h' | 'v' | null — fijado en el primer movimiento
+
+  const THRESHOLD = 76
+
+  function onTouchStart(e) {
+    startX.current = e.touches[0].clientX
+    startY.current = e.touches[0].clientY
+    axis.current = null
+    setDragging(true)
+  }
+
+  function onTouchMove(e) {
+    if (!dragging) return
+    const dx = e.touches[0].clientX - startX.current
+    const dy = e.touches[0].clientY - startY.current
+
+    // Fijar eje en el primer movimiento para no competir con scroll vertical
+    if (axis.current === null) {
+      if (Math.abs(dx) > Math.abs(dy) + 4) axis.current = 'h'
+      else { axis.current = 'v'; return }
+    }
+    if (axis.current !== 'h') return
+
+    e.preventDefault()
+    // Limitar desplazamiento: izquierda hasta -120, derecha hasta +100
+    setOffsetX(Math.max(-120, Math.min(100, dx)))
+  }
+
+  function onTouchEnd() {
+    setDragging(false)
+    if (axis.current !== 'h') return
+
+    if (offsetX < -THRESHOLD) {
+      // Animar fuera y luego eliminar
+      setOffsetX(-500)
+      setTimeout(onDelete, 220)
+    } else if (offsetX > THRESHOLD) {
+      onToggle()
+      setOffsetX(0)
+    } else {
+      setOffsetX(0)
+    }
+  }
+
+  const progress = Math.min(1, Math.abs(offsetX) / THRESHOLD)
+  const showLeft = offsetX > 12    // revela fondo verde (completar)
+  const showRight = offsetX < -12  // revela fondo rojo (eliminar)
+
+  return (
+    <div className="relative overflow-hidden">
+      {/* Fondo izquierdo — completar (verde) */}
+      <div
+        className="absolute inset-y-0 left-0 w-full flex items-center px-5 bg-[#30D158]"
+        style={{ opacity: showLeft ? Math.min(1, progress * 1.5) : 0 }}
+      >
+        <svg viewBox="0 0 24 24" fill="none" strokeWidth="3" stroke="#000"
+             strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span className="text-black font-bold text-sm ml-2">
+          {completada ? 'Desmarcar' : 'Completar'}
+        </span>
+      </div>
+
+      {/* Fondo derecho — eliminar (rojo) */}
+      <div
+        className="absolute inset-y-0 right-0 w-full flex items-center justify-end px-5 bg-[#FF3B30]"
+        style={{ opacity: showRight ? Math.min(1, progress * 1.5) : 0 }}
+      >
+        <span className="text-white font-bold text-sm mr-2">Eliminar</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"
+             strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14H6L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+          <path d="M9 6V4h6v2"/>
+        </svg>
+      </div>
+
+      {/* Fila deslizable */}
+      <div
+        style={{
+          transform: `translateX(${offsetX}px)`,
+          transition: dragging ? 'none' : 'transform 0.25s ease',
+          willChange: 'transform',
+        }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {children}
+      </div>
+    </div>
+  )
 }
 
 // ── Componente ────────────────────────────────────────────────────────────
@@ -148,6 +252,17 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
         distancia: esCardio ? (ultima?.distancia ?? '') : '',
         completada: false,
       }],
+    }))
+  }
+
+  async function eliminarSerie(iIdx, sIdx) {
+    const set = items[iIdx].sets[sIdx]
+    await deleteSet(set.id)
+    // Si el timer apunta a esta serie o a una posterior, cancelarlo
+    if (timer?.exerciseIdx === iIdx && timer?.setIdx >= sIdx) setTimer(null)
+    setItems(prev => prev.map((it, i) => i !== iIdx ? it : {
+      ...it,
+      sets: it.sets.filter((_, j) => j !== sIdx).map((s, j) => ({ ...s, orden: j + 1 })),
     }))
   }
 
@@ -350,9 +465,14 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
 
                 return (
                   <div key={set.id}>
+                    <SwipeableSetRow
+                      completada={set.completada}
+                      onToggle={() => toggleSerie(iIdx, sIdx)}
+                      onDelete={() => eliminarSerie(iIdx, sIdx)}
+                    >
                     <div
                       className={`flex items-center px-3 py-2 gap-2 border-t border-[#38383A] ${
-                        set.completada ? 'bg-[#30D158]/10' : ''
+                        set.completada ? 'bg-[#30D158]/10' : 'bg-[#1C1C1E]'
                       }`}
                     >
                       <span className="w-5 text-center text-[#8E8E93] text-sm shrink-0">{sIdx + 1}</span>
@@ -368,7 +488,7 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
                         onChange={e => actualizarValor(iIdx, sIdx, campo1, e.target.value)}
                         onBlur={() => guardarAlSalir(iIdx, sIdx)}
                         placeholder={placeholder1}
-                        className={`w-[52px] shrink-0 text-center rounded-xl py-2 text-sm outline-none ${
+                        className={`w-[52px] min-w-0 shrink-0 text-center rounded-xl py-2 text-sm outline-none ${
                           set.completada
                             ? 'bg-[#30D158]/20 text-[#30D158] font-semibold'
                             : 'bg-[#2C2C2E] text-white placeholder-[#555]'
@@ -382,7 +502,7 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
                         onChange={e => actualizarValor(iIdx, sIdx, campo2, e.target.value)}
                         onBlur={() => guardarAlSalir(iIdx, sIdx)}
                         placeholder={placeholder2}
-                        className={`w-[52px] shrink-0 text-center rounded-xl py-2 text-sm outline-none ${
+                        className={`w-[52px] min-w-0 shrink-0 text-center rounded-xl py-2 text-sm outline-none ${
                           set.completada
                             ? 'bg-[#30D158]/20 text-[#30D158] font-semibold'
                             : 'bg-[#2C2C2E] text-white placeholder-[#555]'
@@ -405,6 +525,7 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
                         </svg>
                       </button>
                     </div>
+                    </SwipeableSetRow>
 
                     {/* Timer inline — aparece justo debajo de esta serie si fue la última completada */}
                     {timerEnEstaSerie && (
