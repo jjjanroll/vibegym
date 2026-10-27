@@ -151,6 +151,8 @@ export async function saveTemplate(template) {
 
 export async function deleteTemplate(id) {
   const db = await getDB()
+  const tes = await db.getAllFromIndex('templateExercises', 'templateId', id)
+  await Promise.all(tes.map(te => db.delete('templateExercises', te.id)))
   await db.delete('templates', id)
 }
 

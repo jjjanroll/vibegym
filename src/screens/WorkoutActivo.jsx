@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { saveWorkout, saveWorkoutExercise, saveSet, deleteSet, deleteWorkoutCompleto, getLastSetsForExercise, getUser } from '../db'
+import { saveWorkout, saveWorkoutExercise, saveSet, deleteSet, deleteWorkoutCompleto, getLastSetsForExercise, getUser, getWorkoutExercises, getExercise, getSets, getWorkout } from '../db'
 import DumbbellIcon from '../components/DumbbellIcon'
 import SelectorEjercicios from './SelectorEjercicios'
 
@@ -72,10 +72,53 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
   const longPressTimerRef = useRef(null)
   const dismissTimerRef = useRef(null)
 
-  // Leer timer configurado por el usuario
+  // Cargar estado existente (resume o desde plantilla)
   useEffect(() => {
-    getUser().then(u => { if (u?.timerSegundos) setTimerDefault(u.timerSegundos) })
-  }, [])
+    async function cargar() {
+      const [user, wes, workout] = await Promise.all([
+        getUser(),
+        getWorkoutExercises(workoutId),
+        getWorkout(workoutId),
+      ])
+      if (user?.timerSegundos) setTimerDefault(user.timerSegundos)
+      if (workout?.fechaInicio) {
+        const elapsed = Math.floor((Date.now() - new Date(workout.fechaInicio)) / 1000)
+        inicioRef.current = Date.now() - elapsed * 1000
+      }
+      if (wes.length === 0) return
+
+      const loaded = await Promise.all(wes.sort((a,b) => a.orden - b.orden).map(async we => {
+        const [ejercicio, sets] = await Promise.all([
+          getExercise(we.exerciseId),
+          getSets(we.id),
+        ])
+        return {
+          weId: we.id,
+          ejercicioId: we.exerciseId,
+          nombre: ejercicio?.nombre ?? '?',
+          tipo: ejercicio?.tipo ?? 'fuerza',
+          notas: we.notas ?? '',
+          sets: sets.length > 0
+            ? sets.map(s => ({
+                id: s.id, orden: s.orden,
+                peso: s.peso ?? '', reps: s.reps ?? '',
+                tiempo: s.tiempo ?? '', distancia: s.distancia ?? '',
+                completada: s.completada,
+              }))
+            : [{ id: null, orden: 1, peso: '', reps: '', tiempo: '', distancia: '', completada: false }],
+        }
+      }))
+
+      const ants = {}
+      await Promise.all(loaded.map(async item => {
+        ants[item.ejercicioId] = await getLastSetsForExercise(item.ejercicioId, workoutId)
+      }))
+
+      setAnteriores(ants)
+      setItems(loaded)
+    }
+    cargar()
+  }, [workoutId])
 
   // Cronómetro del entrenamiento
   useEffect(() => {

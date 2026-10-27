@@ -146,16 +146,76 @@ export default function ResumenWorkout({ workout, onGuardar }) {
         )}
       </div>
 
-      {/* Botón guardar */}
+      {/* Guardar como plantilla */}
+      {datos && datos.ejercicios.length > 0 && (
+        <GuardarPlantillaInline onGuardar={onGuardar} />
+      )}
+
+      {/* Botón guardar simple si no hay datos */}
+      {(!datos || datos.ejercicios.length === 0) && (
+        <div className="shrink-0 px-4 py-4 bg-black border-t border-[#38383A]"
+             style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}>
+          <button
+            onClick={() => onGuardar(null)}
+            className="w-full bg-[#30D158] text-black font-bold text-lg py-4 rounded-2xl active:opacity-80"
+          >
+            Guardar entrenamiento
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function GuardarPlantillaInline({ onGuardar }) {
+  const [modo, setModo] = useState('normal') // 'normal' | 'nombrePlantilla'
+  const [nombre, setNombre] = useState('')
+
+  if (modo === 'nombrePlantilla') {
+    return (
       <div className="shrink-0 px-4 py-4 bg-black border-t border-[#38383A]"
            style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}>
-        <button
-          onClick={onGuardar}
-          className="w-full bg-[#30D158] text-black font-bold text-lg py-4 rounded-2xl active:opacity-80"
-        >
-          Guardar entrenamiento
-        </button>
+        <input
+          type="text"
+          value={nombre}
+          onChange={e => setNombre(e.target.value)}
+          placeholder="Nombre de la rutina (ej: Empuje A)"
+          autoFocus
+          className="w-full bg-[#1C1C1E] text-white px-4 py-3.5 rounded-xl outline-none placeholder-[#3A3A3C] mb-3"
+        />
+        <div className="flex gap-3">
+          <button
+            onClick={() => setModo('normal')}
+            className="flex-1 bg-[#2C2C2E] text-white font-semibold py-4 rounded-2xl active:opacity-80"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={() => onGuardar(nombre.trim() || 'Mi rutina')}
+            className="flex-1 bg-[#30D158] text-black font-bold py-4 rounded-2xl active:opacity-80"
+          >
+            Guardar rutina
+          </button>
+        </div>
       </div>
+    )
+  }
+
+  return (
+    <div className="shrink-0 px-4 py-4 bg-black border-t border-[#38383A]"
+         style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}>
+      <button
+        onClick={() => onGuardar(null)}
+        className="w-full bg-[#30D158] text-black font-bold text-lg py-4 rounded-2xl active:opacity-80 mb-3"
+      >
+        Guardar entrenamiento
+      </button>
+      <button
+        onClick={() => setModo('nombrePlantilla')}
+        className="w-full text-[#30D158] font-semibold text-base py-2 active:opacity-70"
+      >
+        + Guardar también como rutina
+      </button>
     </div>
   )
 }

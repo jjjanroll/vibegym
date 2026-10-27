@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react'
-import { getAllExercises, getPRForExercise, getWorkoutExercises, getAllWorkouts, getSets, getUser } from '../db'
+import { getAllExercises, getPRForExercise, getWorkoutExercises, getAllWorkouts, getSets, getUser, saveExercise, deleteExercise } from '../db'
 
-const CATEGORIAS = ['Todas', 'Pecho', 'Espalda', 'Hombros', 'Bíceps', 'Tríceps', 'Piernas', 'Core', 'Cardio']
+const CATEGORIAS_FILTRO = ['Todas', 'Pecho', 'Espalda', 'Hombros', 'Bíceps', 'Tríceps', 'Piernas', 'Core', 'Cardio']
+const CATEGORIAS = ['Pecho', 'Espalda', 'Hombros', 'Bíceps', 'Tríceps', 'Piernas', 'Core', 'Cardio']
+const TIPOS = [
+  { id: 'fuerza',       label: 'Fuerza',        sub: 'Peso + repeticiones' },
+  { id: 'peso_corporal', label: 'Peso corporal', sub: 'Solo repeticiones' },
+  { id: 'cardio',       label: 'Cardio',         sub: 'Tiempo + distancia' },
+]
 
 const CATEGORIA_STYLE = {
   'Pecho':    { bg: '#0A84FF', text: 'Pe' },
@@ -147,6 +153,113 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
   )
 }
 
+// ── Crear ejercicio personalizado ─────────────────────────────────────────
+
+function CrearEjercicio({ onGuardar, onCancelar }) {
+  const [nombre, setNombre]       = useState('')
+  const [categoria, setCategoria] = useState('Pecho')
+  const [tipo, setTipo]           = useState('fuerza')
+  const [musculo, setMusculo]     = useState('')
+
+  async function guardar() {
+    if (!nombre.trim()) return
+    await saveExercise({
+      nombre: nombre.trim(),
+      categoria,
+      musculoPrincipal: musculo.trim() || categoria,
+      tipo,
+      esPersonalizado: true,
+      descripcion: null,
+      musculosSecundarios: [],
+    })
+    onGuardar()
+  }
+
+  return (
+    <div className="pb-8">
+      <div className="px-4 pt-5 pb-3 flex items-center justify-between border-b border-[#38383A]">
+        <button onClick={onCancelar} className="text-[#30D158] font-medium text-sm flex items-center gap-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+               strokeLinecap="round" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+          Cancelar
+        </button>
+        <h1 className="text-lg font-bold">Nuevo ejercicio</h1>
+        <button onClick={guardar} disabled={!nombre.trim()} className="text-[#30D158] font-semibold disabled:opacity-30">
+          Guardar
+        </button>
+      </div>
+
+      <div className="px-4 mt-4 flex flex-col gap-4">
+        <div>
+          <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2 px-1">Nombre</p>
+          <input
+            type="text"
+            value={nombre}
+            onChange={e => setNombre(e.target.value)}
+            placeholder="Ej: Press inclinado con mancuernas"
+            autoFocus
+            className="w-full bg-[#1C1C1E] text-white px-5 py-4 rounded-2xl outline-none placeholder-[#3A3A3C] text-base"
+          />
+        </div>
+
+        <div>
+          <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2 px-1">Categoría</p>
+          <div className="flex flex-wrap gap-2">
+            {CATEGORIAS.map(c => (
+              <button
+                key={c}
+                onClick={() => setCategoria(c)}
+                className={`px-3.5 py-2 rounded-xl text-sm font-medium border transition-all ${
+                  categoria === c
+                    ? 'bg-[#30D158] border-[#30D158] text-black'
+                    : 'bg-[#1C1C1E] border-[#38383A] text-white active:opacity-70'
+                }`}
+              >{c}</button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2 px-1">Tipo</p>
+          <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden divide-y divide-[#38383A]">
+            {TIPOS.map(t => (
+              <button
+                key={t.id}
+                onClick={() => setTipo(t.id)}
+                className="w-full px-5 py-3.5 flex items-center justify-between active:bg-[#2C2C2E]"
+              >
+                <div className="text-left">
+                  <p className="text-white font-medium">{t.label}</p>
+                  <p className="text-[#8E8E93] text-xs">{t.sub}</p>
+                </div>
+                {tipo === t.id && (
+                  <div className="w-5 h-5 rounded-full bg-[#30D158] flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="3" stroke="#000"
+                         strokeLinecap="round" strokeLinejoin="round" width="11" height="11">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2 px-1">Músculo principal <span className="normal-case">(opcional)</span></p>
+          <input
+            type="text"
+            value={musculo}
+            onChange={e => setMusculo(e.target.value)}
+            placeholder={`Ej: ${categoria}`}
+            className="w-full bg-[#1C1C1E] text-white px-5 py-4 rounded-2xl outline-none placeholder-[#3A3A3C] text-base"
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Pantalla principal ────────────────────────────────────────────────────
 
 export default function Ejercicios() {
@@ -155,13 +268,22 @@ export default function Ejercicios() {
   const [busqueda, setBusqueda]   = useState('')
   const [seleccionado, setSeleccionado] = useState(null)
   const [unidad, setUnidad] = useState('kg')
+  const [creando, setCreando] = useState(false)
 
-  useEffect(() => {
+  function cargarEjercicios() {
     getAllExercises().then(todos =>
       setEjercicios(todos.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')))
     )
+  }
+
+  useEffect(() => {
+    cargarEjercicios()
     getUser().then(u => { if (u?.unidad) setUnidad(u.unidad) })
   }, [])
+
+  if (creando) {
+    return <CrearEjercicio onGuardar={() => { setCreando(false); cargarEjercicios() }} onCancelar={() => setCreando(false)} />
+  }
 
   const filtrados = ejercicios.filter(e => {
     const okCat = categoria === 'Todas' || e.categoria === categoria
@@ -182,8 +304,11 @@ export default function Ejercicios() {
   return (
     <div className="pb-8">
 
-      <div className="px-4 pt-5 pb-3">
+      <div className="px-4 pt-5 pb-3 flex items-end justify-between">
         <h1 className="text-[34px] font-bold tracking-tight">Ejercicios</h1>
+        <button onClick={() => setCreando(true)} className="text-[#30D158] font-semibold text-sm mb-1">
+          + Crear
+        </button>
       </div>
 
       {/* Buscador */}
@@ -213,7 +338,7 @@ export default function Ejercicios() {
 
       {/* Filtros de categoría */}
       <div className="flex gap-2 px-4 pb-4 overflow-x-auto no-scrollbar">
-        {CATEGORIAS.map(c => (
+        {CATEGORIAS_FILTRO.map(c => (
           <button
             key={c}
             onClick={() => setCategoria(c)}
