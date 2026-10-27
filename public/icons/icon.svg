@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Squircle verde iOS -->
+  <rect width="512" height="512" rx="114" ry="114" fill="#30D158"/>
+  <!-- Mancuerna blanca centrada -->
+  <!-- Barra central -->
+  <rect x="176" y="240" width="160" height="32" rx="16" fill="white"/>
+  <!-- Disco izq izq -->
+  <rect x="96" y="208" width="32" height="96" rx="14" fill="white"/>
+  <!-- Manga izq -->
+  <rect x="128" y="220" width="48" height="72" rx="10" fill="white"/>
+  <!-- Manga der -->
+  <rect x="336" y="220" width="48" height="72" rx="10" fill="white"/>
+  <!-- Disco der der -->
+  <rect x="384" y="208" width="32" height="96" rx="14" fill="white"/>
+</svg>

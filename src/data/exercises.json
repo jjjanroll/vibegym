@@ -1,0 +1,1571 @@
+[
+  {
+    "id": "press-banca",
+    "nombre": "Press de banca",
+    "musculo_principal": "Pecho",
+    "musculos_secundarios": ["Hombros", "Tríceps"],
+    "equipamiento": "Barra",
+    "descripcion": "Ejercicio de empuje horizontal fundamental para desarrollar el pecho. Se realiza acostado en un banco plano empujando una barra desde el pecho hasta la extensión completa de brazos.",
+    "tips": [
+      "Retrae los omóplatos: junta los hombros hacia atrás y abajo como si quisieras metértelos en los bolsillos traseros. Esto protege los hombros y genera más fuerza.",
+      "Mantén los pies firmemente apoyados en el suelo durante todo el movimiento para mejorar estabilidad.",
+      "Baja la barra de forma controlada hasta rozar levemente el pecho — no la dejes caer ni la rebotes.",
+      "El agarre debe ser ligeramente más ancho que los hombros, con las muñecas rectas y firmes, no dobladas hacia atrás.",
+      "Empuja la barra hacia arriba y ligeramente hacia la cara (trayectoria en arco), no en línea recta."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "press-inclinado",
+    "nombre": "Press inclinado",
+    "musculo_principal": "Pecho superior",
+    "musculos_secundarios": ["Hombros", "Tríceps"],
+    "equipamiento": "Barra o mancuernas",
+    "descripcion": "Variante del press de banca con el banco inclinado entre 30 y 45 grados. Enfatiza la parte superior del pecho.",
+    "tips": [
+      "El ángulo ideal del banco es 30°. Más inclinación transfiere el trabajo al hombro anterior.",
+      "Baja las mancuernas con los codos a unos 45-60° respecto al cuerpo, no completamente abiertos.",
+      "Las mancuernas permiten mayor rango de movimiento que la barra y corrigen desequilibrios entre lados.",
+      "Mantén el arco natural de la espalda baja apoyado en el banco en todo momento."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "press-declinado",
+    "nombre": "Press declinado",
+    "musculo_principal": "Pecho inferior",
+    "musculos_secundarios": ["Tríceps", "Hombros"],
+    "equipamiento": "Barra o mancuernas",
+    "descripcion": "Variante del press de banca con el banco en declive. Trabaja la parte inferior del pecho.",
+    "tips": [
+      "Asegura bien los pies antes de comenzar — la posición invertida puede ser inestable.",
+      "El rango de movimiento es naturalmente más corto que en banco plano.",
+      "Evita este ejercicio si tienes presión arterial alta — la posición con la cabeza hacia abajo puede causarte mareos.",
+      "Mantén los omóplatos retraídos igual que en el press plano."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "aperturas-pecho",
+    "nombre": "Aperturas de pecho (Pec Fly)",
+    "musculo_principal": "Pecho",
+    "musculos_secundarios": ["Hombros anteriores"],
+    "equipamiento": "Máquina o mancuernas",
+    "descripcion": "Ejercicio de aislamiento para el pecho. Movimiento de apertura y cierre en arco con los brazos ligeramente flexionados.",
+    "tips": [
+      "En la máquina, ajusta el asiento para que puedas tocar el suelo con los pies y la espalda quede completamente apoyada.",
+      "No uses demasiado peso: el objetivo es sentir el pecho trabajar, no empujar con los hombros.",
+      "Mantén una leve flexión en los codos durante todo el movimiento — los brazos no deben estar completamente rectos.",
+      "Al cerrar, imagina que abrazas un árbol grande. No choques las manos al final para mantener tensión."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "fondos-paralelas",
+    "nombre": "Fondos en paralelas",
+    "musculo_principal": "Pecho inferior",
+    "musculos_secundarios": ["Tríceps", "Hombros"],
+    "equipamiento": "Paralelas",
+    "descripcion": "Ejercicio compuesto de empuje con el peso corporal. Inclinando el torso hacia adelante activa más el pecho; manteniéndote erguido trabaja más los tríceps.",
+    "tips": [
+      "Para activar el pecho, inclina el torso hacia adelante unos 30° durante el descenso.",
+      "Baja hasta que los codos formen aproximadamente 90° — bajar más puede dañar los hombros.",
+      "No balancees el cuerpo para subir — si no puedes subir limpiamente, usa una banda de asistencia.",
+      "Mantén los hombros bajos y alejados de las orejas en todo momento."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "press-banca-mancuernas",
+    "nombre": "Press de banca con mancuernas",
+    "musculo_principal": "Pecho",
+    "musculos_secundarios": ["Hombros", "Tríceps"],
+    "equipamiento": "Mancuernas",
+    "descripcion": "Variante del press de banca con mancuernas. Permite mayor rango de movimiento y corrige desequilibrios entre lados.",
+    "tips": [
+      "Las mancuernas permiten que los brazos bajen más que con la barra, logrando mayor estiramiento del pecho.",
+      "Junta las mancuernas en la parte alta del movimiento para maximizar la contracción.",
+      "Mantén las muñecas rectas, no dobladas hacia atrás, durante todo el movimiento.",
+      "Si no tienes ayuda, apoya las mancuernas sobre los muslos y úsalos como impulso para llevarlas a la posición inicial."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "press-inclinado-mancuernas",
+    "nombre": "Press inclinado con mancuernas",
+    "musculo_principal": "Pecho superior",
+    "musculos_secundarios": ["Hombros", "Tríceps"],
+    "equipamiento": "Mancuernas",
+    "descripcion": "Press inclinado con mancuernas para el pecho superior. El banco a 30-45° y las mancuernas permiten un rango de movimiento óptimo.",
+    "tips": [
+      "30° de inclinación es suficiente. A más ángulo, el hombro anterior toma demasiado protagonismo.",
+      "Baja las mancuernas hasta la altura del pecho o levemente más abajo para el estiramiento completo.",
+      "Los codos a unos 45-60° del torso — no completamente abiertos.",
+      "Alterna con la barra para trabajar la misma zona desde ángulos complementarios."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "cruce-poleas",
+    "nombre": "Cruce de poleas (Cable Crossover)",
+    "musculo_principal": "Pecho",
+    "musculos_secundarios": ["Hombros anteriores"],
+    "equipamiento": "Poleas",
+    "descripcion": "Aislamiento de pecho con poleas. Mantiene tensión constante en el músculo durante todo el rango de movimiento.",
+    "tips": [
+      "La posición de la polea cambia el énfasis: alta → pecho inferior; baja → pecho superior; media → pecho general.",
+      "El movimiento de los brazos es en arco, como si abrazas a alguien — no empujes en línea recta.",
+      "Cruza las manos al final para mayor contracción del pecho.",
+      "Controla el regreso lentamente para aprovechar el estiramiento del pecho."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "pec-deck",
+    "nombre": "Pec Deck (Máquina mariposa)",
+    "musculo_principal": "Pecho",
+    "musculos_secundarios": ["Hombros anteriores"],
+    "equipamiento": "Máquina Pec Deck",
+    "descripcion": "Aislamiento de pecho en máquina. Movimiento guiado que facilita la técnica y permite enfocarse en la contracción.",
+    "tips": [
+      "Ajusta el asiento para que los codos queden a la altura de los hombros — ni más alto ni más bajo.",
+      "La espalda debe quedar completamente apoyada en el respaldo durante todo el movimiento.",
+      "Al cerrar, aprieta el pecho fuerte por un segundo antes de regresar.",
+      "No uses tanto peso que pierdas el control en la apertura — el estiramiento debe ser suave y controlado."
+    ],
+    "tipo": "maquina",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "press-pecho-maquina",
+    "nombre": "Press de pecho en máquina",
+    "musculo_principal": "Pecho",
+    "musculos_secundarios": ["Tríceps", "Hombros"],
+    "equipamiento": "Máquina press",
+    "descripcion": "Versión de máquina del press de banca. Ideal para principiantes o como ejercicio de acabado al final del entrenamiento de pecho.",
+    "tips": [
+      "La máquina guía el movimiento, lo que la hace más segura para entrenar sin compañero.",
+      "Ajusta el asiento para que las manijas queden a la altura del pecho, no de los hombros.",
+      "Mantén la espalda apoyada en el respaldo en todo momento.",
+      "Ideal al final del entreno cuando los músculos ya están fatigados."
+    ],
+    "tipo": "maquina",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "aperturas-inclinadas",
+    "nombre": "Aperturas inclinadas con mancuernas",
+    "musculo_principal": "Pecho superior",
+    "musculos_secundarios": ["Hombros anteriores"],
+    "equipamiento": "Mancuernas",
+    "descripcion": "Variante inclinada de las aperturas para enfocarse en el pecho superior. El banco a 30° cambia el ángulo de trabajo.",
+    "tips": [
+      "El movimiento es de apertura y cierre en arco, con los codos siempre ligeramente flexionados.",
+      "Baja las mancuernas hasta que el pecho se estire bien, sin provocar tensión excesiva en el hombro.",
+      "Este ejercicio funciona muy bien con pesos moderados — no necesitas mucha carga para sentirlo.",
+      "Sube las mancuernas juntas, casi tocándose, para maximizar la contracción del pecho superior."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "flexiones",
+    "nombre": "Flexiones (Push-ups)",
+    "musculo_principal": "Pecho",
+    "musculos_secundarios": ["Tríceps", "Hombros", "Core"],
+    "equipamiento": "Ninguno",
+    "descripcion": "El ejercicio de pecho más accesible. Solo con el peso del cuerpo. Manos más abiertas trabajan más el pecho; más cerradas, más los tríceps.",
+    "tips": [
+      "El cuerpo debe formar una línea recta de la cabeza a los talones — no dejes que las caderas caigan.",
+      "Baja hasta que el pecho casi toque el suelo — el rango completo hace la diferencia.",
+      "Los codos a unos 45° respecto al cuerpo, ni completamente pegados ni completamente abiertos.",
+      "Para más dificultad: eleva los pies en un banco. Para menos: apoya las rodillas."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "pullover-mancuerna",
+    "nombre": "Pull-over con mancuerna",
+    "musculo_principal": "Pecho",
+    "musculos_secundarios": ["Dorsal", "Tríceps"],
+    "equipamiento": "Mancuerna",
+    "descripcion": "Ejercicio único que trabaja el pecho y el dorsal en un solo movimiento. Se realiza acostado en un banco, bajando una mancuerna por encima de la cabeza.",
+    "tips": [
+      "Mantén los codos ligeramente flexionados durante todo el movimiento — nunca los bloquees.",
+      "El movimiento es en arco: desde encima del pecho hasta detrás de la cabeza.",
+      "Para más activación del pecho, mantén los codos más abiertos. Para más dorsal, ciérralos.",
+      "El estiramiento es la parte más importante — lleva la mancuerna hasta donde sientas el pecho estirarse."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Pecho"
+  },
+  {
+    "id": "dominadas",
+    "nombre": "Dominadas (Pull-ups)",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides"],
+    "equipamiento": "Barra fija",
+    "descripcion": "Ejercicio de jalón vertical con el peso corporal. Agarre en pronación (palmas lejos) para dominadas, supinación (palmas hacia ti) para chin-ups con más bíceps.",
+    "tips": [
+      "Inicia el movimiento bajando los hombros desde las orejas (depresión escapular) antes de doblar los codos.",
+      "Imagina que quieres meter los codos en los bolsillos traseros del pantalón al subir.",
+      "No hagas el movimiento con impulso de las caderas si tu objetivo es fuerza o músculo.",
+      "El descenso controlado construye más músculo que la subida — tómate 2-3 segundos para bajar."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "remo-barra",
+    "nombre": "Remo con barra",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides", "Trapecio"],
+    "equipamiento": "Barra",
+    "descripcion": "Ejercicio compuesto de tracción horizontal. Fundamental para el grosor de la espalda.",
+    "tips": [
+      "Mantén la espalda recta con el torso inclinado entre 45° y paralelo al suelo.",
+      "Tira la barra hacia el ombligo, no hacia el pecho — activa más el dorsal.",
+      "Retrae los omóplatos al final del movimiento, como si quisieras juntarlos.",
+      "No uses el impulso de las caderas para mover más peso."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "remo-mancuerna",
+    "nombre": "Remo con mancuerna",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides"],
+    "equipamiento": "Mancuerna",
+    "descripcion": "Versión unilateral del remo. Se apoya una rodilla y una mano en un banco, y se jala la mancuerna con el otro brazo.",
+    "tips": [
+      "Apoya bien la mano y la rodilla del mismo lado en el banco para estabilizar la espalda.",
+      "Tira la mancuerna hacia la cadera — imagina que arrancas la correa de un cortacésped.",
+      "Permite que el hombro baje completamente al inicio para el estiramiento completo del dorsal.",
+      "Mantén el torso paralelo al suelo — no rotes el cuerpo para levantar más peso."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "jalon-pecho",
+    "nombre": "Jalón al pecho",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides"],
+    "equipamiento": "Polea alta",
+    "descripcion": "Ejercicio de jalón vertical en polea. Alternativa a las dominadas para quienes aún no pueden hacerlas con el peso corporal.",
+    "tips": [
+      "Ajusta el rodillo de piernas para que tus muslos queden bien sujetos sin que te levantes al tirar.",
+      "Lleva la barra al pecho superior con el torso en una leve inclinación hacia atrás.",
+      "Inicia el movimiento deprimiendo los hombros (bájandolos desde las orejas) antes de doblar los codos.",
+      "Sube la barra de forma controlada hasta la extensión casi completa para mantener tensión."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "peso-muerto",
+    "nombre": "Peso muerto",
+    "musculo_principal": "Espalda baja (erector espinal)",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales", "Trapecio", "Core"],
+    "equipamiento": "Barra",
+    "descripcion": "El ejercicio más completo del cuerpo. Trabaja prácticamente todos los músculos.",
+    "tips": [
+      "La barra debe quedar rozando las espinillas durante toda la subida.",
+      "Antes de jalar, saca el pecho y aprieta el core. La espalda debe estar recta.",
+      "El movimiento inicia empujando el suelo con los pies, no jalando con la espalda.",
+      "Al bajar, primero van las caderas hacia atrás y luego doblan las rodillas — no es una sentadilla."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "remo-polea-baja",
+    "nombre": "Remo en polea baja (Seated Cable Row)",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides", "Trapecio"],
+    "equipamiento": "Polea baja",
+    "descripcion": "Tracción horizontal sentado en polea. Tensión constante y mayor rango de movimiento que el remo con barra.",
+    "tips": [
+      "Siéntate erguido con las rodillas ligeramente flexionadas — no te recuestes hacia atrás para jalar.",
+      "Tira hacia el abdomen bajo, no hacia el pecho, para activar más el dorsal.",
+      "Al extender los brazos, permite que los hombros avancen levemente para un estiramiento completo.",
+      "Retrae los omóplatos y mantén el pecho fuera en la contracción final."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "jalon-agarre-cerrado",
+    "nombre": "Jalón agarre cerrado",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides"],
+    "equipamiento": "Polea alta",
+    "descripcion": "Variante del jalón con agarre cerrado y palmas enfrentadas. Involucra más el bíceps y la zona media de la espalda.",
+    "tips": [
+      "El agarre cerrado con palmas enfrentadas es más natural para las muñecas y permite mayor rango.",
+      "Tira la manija hacia el pecho superior con el torso ligeramente inclinado hacia atrás.",
+      "Aprieta la espalda en la contracción antes de soltar.",
+      "Alterna con el jalón de agarre ancho para estimular el dorsal desde distintos ángulos."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "chin-ups",
+    "nombre": "Chin-ups (Dominadas supinas)",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides"],
+    "equipamiento": "Barra fija",
+    "descripcion": "Dominadas con agarre supino (palmas hacia ti). Involucra más los bíceps y resulta algo más accesible que las dominadas estándar.",
+    "tips": [
+      "El agarre supino (palmas mirando hacia ti) activa considerablemente más los bíceps.",
+      "Inicia deprimiendo los hombros antes de doblar los codos, igual que en las dominadas.",
+      "Baja completamente de forma controlada para aprovechar la fase excéntrica.",
+      "Si ya dominas las dominadas normales, los chin-ups deberían ser aún más accesibles."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "remo-en-t",
+    "nombre": "Remo en T (T-Bar Row)",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides", "Trapecio"],
+    "equipamiento": "Barra T o máquina",
+    "descripcion": "Remo con la barra fija en un extremo. Permite cargar mucho peso y estimular intensamente el grosor de la espalda.",
+    "tips": [
+      "Inclina el torso entre 45° y paralelo al suelo, con la espalda recta y el pecho fuera.",
+      "Tira hacia el pecho bajo con los codos pegados al cuerpo para más dorsal.",
+      "Evita el balanceo — si el cuerpo se mece para subir, baja el peso.",
+      "La versión con pecho apoyado (chest-supported) facilita mantener la espalda neutral."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "hiperextensiones",
+    "nombre": "Hiperextensiones de espalda",
+    "musculo_principal": "Erector espinal",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales"],
+    "equipamiento": "Banco de hiperextensión",
+    "descripcion": "Aislamiento de la espalda baja y glúteos. El cuerpo se extiende desde una posición inclinada en el banco especial.",
+    "tips": [
+      "El rango termina cuando el cuerpo queda en línea recta — no hiperextiendas más allá de eso.",
+      "Si quieres más glúteos, dobla levemente las rodillas y apriétalos al subir.",
+      "Para agregar carga, sostén un disco en el pecho. Empieza sin peso extra.",
+      "Baja de forma controlada — este ejercicio protege la espalda cuando se hace bien."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "buenos-dias",
+    "nombre": "Buenos días (Good Morning)",
+    "musculo_principal": "Erector espinal",
+    "musculos_secundarios": ["Isquiotibiales", "Glúteos"],
+    "equipamiento": "Barra",
+    "descripcion": "Bisagra de cadera con barra en la espalda. Excelente para fortalecer la cadena posterior: espalda baja, isquiotibiales y glúteos.",
+    "tips": [
+      "Mantén las rodillas ligeramente flexionadas — no las bloquees.",
+      "El movimiento es una bisagra de cadera: las caderas van hacia atrás mientras la espalda permanece recta.",
+      "Usa un peso moderado — trabaja la espalda baja directamente y puede lesionarla si se abusa.",
+      "El rango termina cuando sientes el estiramiento en los isquiotibiales o cuando la espalda empieza a redondearse."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "remo-maquina",
+    "nombre": "Remo en máquina",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Bíceps", "Romboides"],
+    "equipamiento": "Máquina de remo",
+    "descripcion": "Versión guiada del remo. Facilita la técnica y es ideal para terminar la sesión de espalda con alta intensidad.",
+    "tips": [
+      "Ajusta el pecho en el apoyo para que el agarre quede frente a ti con los brazos casi extendidos.",
+      "Tira retrayendo primero los omóplatos y luego doblando los codos.",
+      "Permite mayor rango de movimiento que el remo libre.",
+      "Ideal al final del entrenamiento como ejercicio de acabado con muchas repeticiones."
+    ],
+    "tipo": "maquina",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "peso-muerto-sumo",
+    "nombre": "Peso muerto sumo",
+    "musculo_principal": "Glúteos",
+    "musculos_secundarios": ["Isquiotibiales", "Cuádriceps", "Espalda baja"],
+    "equipamiento": "Barra",
+    "descripcion": "Variante del peso muerto con pies muy abiertos y manos dentro de las piernas. Reduce el estrés lumbar y activa más los glúteos y el interior de los muslos.",
+    "tips": [
+      "Pies más anchos que los hombros con las puntas giradas 30-45° hacia fuera.",
+      "Las rodillas deben seguir la dirección de los pies — nunca dejes que se vayan hacia adentro.",
+      "El torso más erguido que en el peso muerto convencional reduce el estrés lumbar.",
+      "Empuja el suelo hacia afuera (como si quisieras partir el suelo en dos) para activar glúteos y aductores."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "pullover-polea",
+    "nombre": "Pull-over en polea",
+    "musculo_principal": "Espalda (dorsal)",
+    "musculos_secundarios": ["Pecho", "Tríceps"],
+    "equipamiento": "Polea alta",
+    "descripcion": "Versión en polea del pull-over. Mantiene tensión constante en el dorsal en todo el rango de movimiento.",
+    "tips": [
+      "De pie frente a la polea alta, agarra la barra con brazos extendidos y llévalos hacia las caderas en arco.",
+      "Los codos permanecen ligeramente flexionados durante todo el movimiento.",
+      "Uno de los pocos ejercicios que trabaja el dorsal en extensión de hombro.",
+      "Úsalo al inicio de la sesión de espalda para activar el dorsal antes de los ejercicios compuestos."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Espalda"
+  },
+  {
+    "id": "face-pull",
+    "nombre": "Face pull",
+    "musculo_principal": "Deltoides posterior",
+    "musculos_secundarios": ["Trapecio", "Romboides", "Manguito rotador"],
+    "equipamiento": "Polea",
+    "descripcion": "Ejercicio esencial para los hombros posteriores y la salud articular. Se tira una cuerda hacia la cara desde una polea a altura de la cabeza.",
+    "tips": [
+      "Coloca la polea a la altura de tu cara o ligeramente por encima.",
+      "Al tirar, separa los extremos de la cuerda con las palmas hacia arriba al final (rotación externa).",
+      "No es para cargar mucho peso — prioriza la técnica sobre la carga.",
+      "Incluirlo regularmente previene lesiones de hombro y compensa el exceso de ejercicios de empuje."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "press-militar",
+    "nombre": "Press militar",
+    "musculo_principal": "Hombros (deltoides anterior y medial)",
+    "musculos_secundarios": ["Tríceps", "Trapecio"],
+    "equipamiento": "Barra o mancuernas",
+    "descripcion": "Ejercicio de empuje vertical para el desarrollo de los hombros. Se puede realizar de pie o sentado.",
+    "tips": [
+      "El agarre debe ser un poco más ancho que los hombros.",
+      "Aprieta el core y los glúteos para proteger la zona lumbar, especialmente al hacerlo de pie.",
+      "No uses impulso de piernas para subir la barra — si necesitas rebotar, el peso es demasiado.",
+      "Extiende completamente los brazos en la parte superior."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "elevaciones-laterales",
+    "nombre": "Elevaciones laterales",
+    "musculo_principal": "Hombros (deltoides medial)",
+    "musculos_secundarios": [],
+    "equipamiento": "Mancuernas o polea",
+    "descripcion": "Aislamiento del deltoides medial, responsable de la amplitud visual de los hombros.",
+    "tips": [
+      "Usa menos peso del que crees necesitar — con técnica correcta son muy difíciles incluso con poco peso.",
+      "Eleva los brazos hasta que queden paralelos al suelo (90°) — no más alto.",
+      "Lleva los codos ligeramente por delante de las manos para activar mejor el deltoides medial.",
+      "Baja de forma controlada en 2-3 segundos — la bajada también construye músculo."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "elevaciones-frontales",
+    "nombre": "Elevaciones frontales",
+    "musculo_principal": "Hombros (deltoides anterior)",
+    "musculos_secundarios": [],
+    "equipamiento": "Mancuernas o barra",
+    "descripcion": "Aislamiento del deltoides anterior. Se eleva el brazo al frente hasta la altura de los hombros.",
+    "tips": [
+      "El deltoides anterior ya recibe mucho trabajo indirecto en el press — no es necesario sobrecargarlo.",
+      "Eleva el brazo hasta la horizontal (90°), no más arriba.",
+      "Mantén una leve flexión en el codo para no sobrecargar el tendón.",
+      "Alterna brazos en lugar de subirlos simultáneamente para mayor control."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "pajaros",
+    "nombre": "Pájaros (Rear Delt Fly)",
+    "musculo_principal": "Deltoides posterior",
+    "musculos_secundarios": ["Romboides", "Trapecio medio"],
+    "equipamiento": "Mancuernas o máquina",
+    "descripcion": "Aislamiento del deltoides posterior. Se realiza inclinado hacia adelante abriendo los brazos hacia los lados.",
+    "tips": [
+      "Inclina el torso casi paralelo al suelo antes de empezar.",
+      "Mantén los codos ligeramente flexionados durante todo el movimiento.",
+      "El movimiento es pequeño y controlado — no lances los brazos con impulso.",
+      "En máquina (pec deck en reversa), ajusta el asiento para que los codos queden a la altura de los hombros."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "press-arnold",
+    "nombre": "Press Arnold",
+    "musculo_principal": "Hombros (deltoides)",
+    "musculos_secundarios": ["Tríceps", "Trapecio"],
+    "equipamiento": "Mancuernas",
+    "descripcion": "Variante del press de hombros creada por Arnold Schwarzenegger. Combina una rotación de las manos que activa todas las cabezas del deltoides.",
+    "tips": [
+      "Inicia con las mancuernas frente a ti, palmas hacia ti, y rota las muñecas hacia afuera mientras subes.",
+      "La rotación activa el deltoides anterior y medial, haciendo este ejercicio más completo.",
+      "Hazlo sentado para mayor estabilidad y control.",
+      "La velocidad debe ser moderada — no es un ejercicio para hacer rápido."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "press-hombros-mancuernas",
+    "nombre": "Press de hombros con mancuernas",
+    "musculo_principal": "Hombros (deltoides)",
+    "musculos_secundarios": ["Tríceps", "Trapecio"],
+    "equipamiento": "Mancuernas",
+    "descripcion": "Versión con mancuernas del press militar. Mayor libertad de movimiento y trabaja cada hombro de forma independiente.",
+    "tips": [
+      "Puedes hacerlo sentado (más estable) o de pie (más trabajo de core).",
+      "Las mancuernas permiten que las manos sigan una trayectoria más natural que la barra.",
+      "Baja hasta que los codos formen 90° — no más abajo para proteger los hombros.",
+      "No arquees la espalda para empujar — si lo haces, baja el peso."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "encogimientos-barra",
+    "nombre": "Encogimientos de hombros (Shrugs)",
+    "musculo_principal": "Trapecio",
+    "musculos_secundarios": ["Elevador de la escápula"],
+    "equipamiento": "Barra o mancuernas",
+    "descripcion": "Aislamiento del trapecio superior. Se elevan los hombros hacia las orejas.",
+    "tips": [
+      "El movimiento es solo hacia arriba — no hagas círculos con los hombros.",
+      "Mantén la contracción en la parte alta por 1-2 segundos.",
+      "No uses el cuello — los hombros suben, el cuello permanece relajado y neutro.",
+      "No es necesario mucho rango de movimiento — los trapecios son fuertes pero de movimiento corto."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "remo-menton",
+    "nombre": "Remo al mentón (Upright Row)",
+    "musculo_principal": "Trapecio",
+    "musculos_secundarios": ["Deltoides medial", "Bíceps"],
+    "equipamiento": "Barra o mancuernas",
+    "descripcion": "Tracción vertical para trapecios y deltoides mediales. Se jala la barra desde las caderas hasta el mentón.",
+    "tips": [
+      "Usa un agarre ancho para reducir el estrés en los hombros y activar más el deltoides medial.",
+      "El agarre cerrado aumenta el riesgo de pinzamiento — evítalo si tienes historial de lesiones.",
+      "Los codos van hacia arriba y hacia afuera, no pegados al cuerpo.",
+      "Solo sube hasta que los codos queden a la altura de los hombros — no más arriba."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "elevaciones-laterales-polea",
+    "nombre": "Elevaciones laterales en polea",
+    "musculo_principal": "Deltoides medial",
+    "musculos_secundarios": [],
+    "equipamiento": "Polea baja",
+    "descripcion": "Versión en polea de las elevaciones laterales. Mantiene tensión constante durante todo el movimiento, incluso en la posición baja.",
+    "tips": [
+      "La polea mantiene tensión incluso al inicio, donde las mancuernas ofrecen casi ninguna resistencia.",
+      "Párate de lado a la polea y pasa el cable por delante de tu cuerpo para agarrarlo con el brazo opuesto.",
+      "Misma técnica que las elevaciones con mancuerna: eleva hasta la horizontal con el codo levemente flexionado.",
+      "Excelente al final del entrenamiento con muchas repeticiones para congestionar el deltoides."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Hombros"
+  },
+  {
+    "id": "curl-biceps",
+    "nombre": "Curl de bíceps",
+    "musculo_principal": "Bíceps",
+    "musculos_secundarios": ["Braquial", "Braquiorradial"],
+    "equipamiento": "Mancuernas o barra",
+    "descripcion": "Ejercicio básico de aislamiento para el bíceps. Se flexiona el codo llevando el peso desde la cadera hasta el hombro.",
+    "tips": [
+      "Mantén los codos pegados a los costados en todo momento. Si se van hacia adelante, el peso es demasiado.",
+      "No uses el balanceo de caderas para subir el peso.",
+      "Extiende completamente el brazo al bajar para aprovechar el rango completo.",
+      "Supina la muñeca (gírala hacia afuera) al subir para contraer mejor el bíceps."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-martillo",
+    "nombre": "Curl martillo",
+    "musculo_principal": "Braquiorradial",
+    "musculos_secundarios": ["Bíceps", "Braquial"],
+    "equipamiento": "Mancuernas",
+    "descripcion": "Variante del curl con agarre neutro (pulgar arriba). Trabaja más el braquiorradial y el braquial, dando grosor al brazo.",
+    "tips": [
+      "El agarre es neutro (como si sostuvieras un martillo) — las palmas se miran entre sí en todo momento.",
+      "Puedes hacerlo alternando brazos o con los dos simultáneamente.",
+      "Al llegar arriba, no gires la muñeca — mantén el agarre neutro hasta el final.",
+      "Complementa el curl normal para un desarrollo más completo del brazo."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-predicador",
+    "nombre": "Curl en banco predicador",
+    "musculo_principal": "Bíceps (cabeza larga)",
+    "musculos_secundarios": ["Braquial"],
+    "equipamiento": "Banco predicador, barra EZ o mancuerna",
+    "descripcion": "Aislamiento de bíceps con soporte del brazo en el banco predicador. Elimina la posibilidad de hacer trampa con el cuerpo.",
+    "tips": [
+      "No hiperextendas el codo en la parte baja — baja hasta un punto que no genere dolor.",
+      "El banco elimina el balanceo, así que usa menos peso que en el curl normal.",
+      "Aprieta el bíceps al llegar arriba y baja de forma muy controlada.",
+      "La barra EZ es más cómoda para las muñecas que la barra recta."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-barra-recta",
+    "nombre": "Curl con barra recta",
+    "musculo_principal": "Bíceps",
+    "musculos_secundarios": ["Braquial", "Braquiorradial"],
+    "equipamiento": "Barra recta",
+    "descripcion": "Curl con barra recta que permite cargar más peso que con mancuernas y obliga a ambos brazos a trabajar simultáneamente.",
+    "tips": [
+      "El agarre un poco más ancho que los hombros con las palmas hacia arriba (supino).",
+      "Mantén los codos fijos a los lados del cuerpo — si se van hacia adelante, el peso es demasiado.",
+      "Algunas personas prefieren la barra EZ por ser más cómoda para las muñecas.",
+      "El rango completo (extensión total hasta flexión máxima) hace el ejercicio mucho más efectivo."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-barra-ez",
+    "nombre": "Curl con barra EZ",
+    "musculo_principal": "Bíceps",
+    "musculos_secundarios": ["Braquial", "Braquiorradial"],
+    "equipamiento": "Barra EZ",
+    "descripcion": "Curl con la barra en zig-zag (EZ), más cómoda para las muñecas. La posición semi-supina reduce la tensión en las muñecas manteniendo el trabajo en el bíceps.",
+    "tips": [
+      "Agarra la barra en la posición inclinada del zig-zag con las palmas a 45° — más natural para los antebrazos.",
+      "Aunque activa el bíceps ligeramente menos que la recta, la comodidad permite entrenar con más constancia.",
+      "Ideal si tienes problemas de muñecas con la barra recta.",
+      "La técnica es idéntica al curl con barra recta."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-inclinado",
+    "nombre": "Curl inclinado con mancuerna",
+    "musculo_principal": "Bíceps (cabeza larga)",
+    "musculos_secundarios": ["Braquial"],
+    "equipamiento": "Mancuerna, banco inclinado",
+    "descripcion": "Curl en banco inclinado que estira la cabeza larga del bíceps y aumenta el rango de movimiento al inicio del movimiento.",
+    "tips": [
+      "Inclina el banco entre 45 y 60° — a más inclinación, mayor estiramiento de la cabeza larga.",
+      "Deja que el brazo cuelgue completamente hacia atrás antes de empezar — ese estiramiento inicial es lo valioso.",
+      "El movimiento es puro de codo — no muevas el hombro hacia adelante para ayudar.",
+      "Usa menos peso que en el curl normal — el estiramiento inicial lo hace mucho más difícil."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-polea",
+    "nombre": "Curl en polea baja (Cable Curl)",
+    "musculo_principal": "Bíceps",
+    "musculos_secundarios": ["Braquial"],
+    "equipamiento": "Polea baja",
+    "descripcion": "Curl con polea baja. La tensión constante hace que el bíceps trabaje en todo el rango, a diferencia del curl con pesas que tiene puntos muertos.",
+    "tips": [
+      "La ventaja clave: hay tensión en el bíceps incluso en la posición extendida, donde las mancuernas ofrecen casi ninguna.",
+      "Mantén los codos pegados a los costados en todo momento.",
+      "Excelente para finales de entrenamiento con el músculo ya fatigado.",
+      "Prueba también con la cuerda para una posición más natural de las muñecas."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-concentracion",
+    "nombre": "Curl de concentración",
+    "musculo_principal": "Bíceps",
+    "musculos_secundarios": [],
+    "equipamiento": "Mancuerna",
+    "descripcion": "Curl unilateral sentado con el codo apoyado en el muslo. Máximo aislamiento del bíceps sin posibilidad de hacer trampa.",
+    "tips": [
+      "Siéntate en un banco, abre las piernas y apoya el codo en la cara interna del muslo.",
+      "El codo apoyado elimina cualquier posibilidad de balanceo — todo el trabajo lo hace el bíceps.",
+      "Supina completamente la muñeca al subir para maximizar la contracción.",
+      "Usa un peso que te permita sentir el bíceps contraerse fuertemente — no es para ir muy pesado."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-inverso",
+    "nombre": "Curl inverso (Reverse Curl)",
+    "musculo_principal": "Braquiorradial",
+    "musculos_secundarios": ["Bíceps", "Extensores del antebrazo"],
+    "equipamiento": "Barra o mancuernas",
+    "descripcion": "Curl con agarre prono (palmas hacia abajo). Trabaja el braquiorradial y los extensores del antebrazo, zonas habitualmente descuidadas.",
+    "tips": [
+      "El agarre prono cambia el músculo principal del bíceps al braquiorradial.",
+      "Usa menos peso que en el curl normal — el agarre prono es mecánicamente más débil.",
+      "Los codos fijos a los lados, igual que en el curl estándar.",
+      "Excelente para equilibrar el desarrollo del brazo y prevenir lesiones de codo y muñeca."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "curl-zottman",
+    "nombre": "Curl Zottman",
+    "musculo_principal": "Bíceps",
+    "musculos_secundarios": ["Braquiorradial", "Braquial"],
+    "equipamiento": "Mancuernas",
+    "descripcion": "Curl que combina subida en supino y bajada en prono. Trabaja el bíceps en la subida y el braquiorradial y extensores en la bajada.",
+    "tips": [
+      "Sube con las palmas hacia arriba (supino) como en el curl normal.",
+      "En la parte alta, rota las muñecas para que las palmas queden hacia abajo (prono) antes de bajar.",
+      "Baja lentamente con las palmas hacia abajo — ahí trabajan los braquiorradiales.",
+      "Un ejercicio eficiente que trabaja más zonas del brazo en un solo movimiento."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Bíceps"
+  },
+  {
+    "id": "extension-triceps-polea",
+    "nombre": "Extensión de tríceps en polea",
+    "musculo_principal": "Tríceps",
+    "musculos_secundarios": [],
+    "equipamiento": "Polea alta",
+    "descripcion": "Aislamiento de tríceps jalando hacia abajo una cuerda o barra desde una polea alta.",
+    "tips": [
+      "Mantén los codos pegados al cuerpo o ligeramente hacia adelante — no los dejes abrirse.",
+      "En la extensión completa con cuerda, separa las manos hacia los lados para maximizar la contracción.",
+      "No uses el peso del cuerpo para empujar hacia abajo — el movimiento viene solo del codo.",
+      "El codo es el único punto que se mueve — los hombros no deben subir ni bajar."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "press-frances",
+    "nombre": "Press francés (Skull Crusher)",
+    "musculo_principal": "Tríceps",
+    "musculos_secundarios": [],
+    "equipamiento": "Barra EZ o mancuernas",
+    "descripcion": "Aislamiento para tríceps. Se baja una barra hacia la frente doblando solo los codos, acostado en banco.",
+    "tips": [
+      "Baja la barra hacia la frente o ligeramente detrás de la cabeza — no directamente sobre la cara.",
+      "Solo se mueven los codos — los hombros permanecen inmóviles.",
+      "La barra EZ es más cómoda para las muñecas que la barra recta.",
+      "No uses tanto peso que no puedas controlar el descenso."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "fondos-triceps",
+    "nombre": "Fondos para tríceps (en banco)",
+    "musculo_principal": "Tríceps",
+    "musculos_secundarios": ["Pecho inferior", "Hombros"],
+    "equipamiento": "Banco o silla",
+    "descripcion": "Ejercicio de peso corporal para tríceps apoyando las manos en un banco detrás del cuerpo.",
+    "tips": [
+      "Mantén la espalda pegada al banco al bajar — alejarte del banco lo vuelve ineficiente.",
+      "Los pies juntos y las piernas extendidas aumentan la dificultad. Rodillas dobladas = versión más fácil.",
+      "Baja hasta que los codos formen 90° — bajar más puede dañar los hombros.",
+      "Para más dificultad, apoya los pies en otro banco y coloca peso en el regazo."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "press-agarre-cerrado",
+    "nombre": "Press de banca agarre cerrado",
+    "musculo_principal": "Tríceps",
+    "musculos_secundarios": ["Pecho", "Hombros"],
+    "equipamiento": "Barra",
+    "descripcion": "Variante del press de banca con agarre estrecho que enfoca el trabajo en los tríceps. Uno de los mejores ejercicios compuestos para el tríceps.",
+    "tips": [
+      "El agarre al ancho de los hombros o ligeramente más estrecho — no demasiado cerrado para no estresar las muñecas.",
+      "Los codos van pegados al cuerpo al bajar, no se abren hacia los lados.",
+      "Baja la barra hasta el pecho bajo, no al centro del pecho.",
+      "Permite cargar más peso que otros ejercicios de tríceps — ideal para trabajo de fuerza."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "kickback-triceps",
+    "nombre": "Patada de tríceps (Kickback)",
+    "musculo_principal": "Tríceps",
+    "musculos_secundarios": [],
+    "equipamiento": "Mancuerna",
+    "descripcion": "Aislamiento para el tríceps. Con el torso inclinado, se extiende el codo hacia atrás.",
+    "tips": [
+      "El brazo (húmero) debe quedar paralelo al suelo antes de extender el codo — esa es la posición inicial.",
+      "Solo el antebrazo se mueve — el húmero permanece estático durante todo el movimiento.",
+      "La contracción máxima ocurre cuando el brazo está completamente extendido — mantén esa posición un segundo.",
+      "Usa poco peso — la mecánica lo hace muy difícil con cargas altas y la técnica colapsa fácilmente."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "extension-triceps-cabeza",
+    "nombre": "Extensión de tríceps sobre la cabeza",
+    "musculo_principal": "Tríceps (cabeza larga)",
+    "musculos_secundarios": [],
+    "equipamiento": "Mancuerna o barra EZ",
+    "descripcion": "Aislamiento que trabaja la cabeza larga del tríceps en posición de estiramiento máximo, lo que aumenta el rango y la activación muscular.",
+    "tips": [
+      "La posición sobre la cabeza estira la cabeza larga del tríceps más que ningún otro ejercicio.",
+      "Solo se mueven los antebrazos — los codos permanecen fijos apuntando al techo.",
+      "Baja el peso hacia la nuca de forma controlada sin que los codos se abran hacia los lados.",
+      "Hacerlo sentado es más estable y reduce el riesgo de arquear la espalda."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "triceps-cuerda",
+    "nombre": "Tríceps en polea con cuerda (Rope Pushdown)",
+    "musculo_principal": "Tríceps",
+    "musculos_secundarios": [],
+    "equipamiento": "Polea alta con cuerda",
+    "descripcion": "Extensión de tríceps en polea usando cuerda. La cuerda permite separar las manos al final para mayor contracción.",
+    "tips": [
+      "En la posición extendida, separa los extremos de la cuerda hacia los lados para maximizar la contracción.",
+      "Los codos permanecen fijos pegados al cuerpo durante todo el movimiento.",
+      "La cuerda activa las tres cabezas del tríceps de forma más completa que la barra.",
+      "No te inclines hacia adelante para empujar más — el torso debe permanecer erguido."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "extension-triceps-cabeza-polea",
+    "nombre": "Extensión de tríceps sobre la cabeza en polea",
+    "musculo_principal": "Tríceps (cabeza larga)",
+    "musculos_secundarios": [],
+    "equipamiento": "Polea baja",
+    "descripcion": "Extensión de tríceps sobre la cabeza usando polea baja. La tensión constante de la polea trabaja la cabeza larga en todo el rango.",
+    "tips": [
+      "De espaldas a la polea baja, agarra la cuerda sobre la cabeza y extiende los brazos hacia adelante.",
+      "La polea crea tensión desde el inicio, a diferencia de las mancuernas donde hay poca tensión al empezar.",
+      "Los codos apuntan hacia adelante y permanecen fijos — solo los antebrazos se mueven.",
+      "Inclina levemente el torso hacia adelante para mayor comodidad."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "dips-asistidos",
+    "nombre": "Fondos asistidos en máquina",
+    "musculo_principal": "Tríceps",
+    "musculos_secundarios": ["Pecho inferior", "Hombros"],
+    "equipamiento": "Máquina de fondos asistidos",
+    "descripcion": "Versión asistida de los fondos en paralelas. La máquina compensa parte del peso corporal, permitiendo trabajar los tríceps con buena técnica.",
+    "tips": [
+      "Cuanto más peso asistido elijas en la máquina, más fácil es el ejercicio.",
+      "Mantente erguido para trabajar más los tríceps. Inclinarte hacia adelante activa más el pecho.",
+      "Baja hasta que los codos formen 90° antes de subir.",
+      "A medida que te fortalezcas, reduce el peso de asistencia gradualmente."
+    ],
+    "tipo": "maquina",
+    "categoria": "Tríceps"
+  },
+  {
+    "id": "sentadilla",
+    "nombre": "Sentadilla",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales", "Core"],
+    "equipamiento": "Barra o peso corporal",
+    "descripcion": "El ejercicio de piernas más completo. Trabaja todo el tren inferior y el core.",
+    "tips": [
+      "Antes de bajar, toma aire profundo y aprieta el core como si fueras a recibir un golpe.",
+      "Las rodillas deben seguir la dirección de los pies al bajar — no dejes que se vayan hacia adentro.",
+      "Baja hasta que los muslos queden paralelos al suelo o más abajo si tu movilidad lo permite.",
+      "Mantén el pecho orgulloso (levantado) en todo momento — si el torso cae, el peso es demasiado."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "prensa-piernas",
+    "nombre": "Prensa de piernas",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales"],
+    "equipamiento": "Máquina prensa",
+    "descripcion": "Ejercicio de máquina para el tren inferior. La posición de los pies en la plataforma cambia el énfasis muscular.",
+    "tips": [
+      "Pies juntos y bajos en la plataforma = más cuádriceps. Pies separados y altos = más glúteos.",
+      "Nunca bloquees completamente las rodillas al extender — mantén una leve flexión.",
+      "La espalda baja debe estar siempre apoyada en el respaldo.",
+      "Baja hasta que las rodillas formen aproximadamente 90°."
+    ],
+    "tipo": "maquina",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "peso-muerto-rumano",
+    "nombre": "Peso muerto rumano",
+    "musculo_principal": "Isquiotibiales",
+    "musculos_secundarios": ["Glúteos", "Espalda baja"],
+    "equipamiento": "Barra o mancuernas",
+    "descripcion": "Variante del peso muerto enfocada en isquiotibiales y glúteos. Las rodillas permanecen casi rectas y el movimiento es principalmente de cadera.",
+    "tips": [
+      "El movimiento es de cadera hacia atrás, no de rodillas dobladas.",
+      "Mantén la barra pegada a las piernas durante todo el descenso.",
+      "Baja hasta donde sientas el estiramiento en los isquiotibiales.",
+      "Aprieta los glúteos al volver a la posición inicial."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "zancadas",
+    "nombre": "Zancadas",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales"],
+    "equipamiento": "Mancuernas o peso corporal",
+    "descripcion": "Ejercicio unilateral para el tren inferior. Se da un paso al frente y se baja la rodilla trasera hacia el suelo.",
+    "tips": [
+      "La rodilla delantera no debe pasar la punta del pie al bajar — mantén la tibia vertical.",
+      "Baja la rodilla trasera casi hasta tocar el suelo sin golpearlo.",
+      "Mantén el torso erguido durante todo el movimiento.",
+      "Al subir, empuja con el talón del pie delantero para activar más el glúteo."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "leg-curl",
+    "nombre": "Curl de piernas (Leg Curl)",
+    "musculo_principal": "Isquiotibiales",
+    "musculos_secundarios": [],
+    "equipamiento": "Máquina",
+    "descripcion": "Aislamiento de isquiotibiales en máquina. Se dobla la rodilla jalando el peso hacia los glúteos.",
+    "tips": [
+      "Ajusta la máquina para que el eje de rotación quede alineado con tu rodilla.",
+      "No levantes las caderas de la máquina al jalar — si lo haces, el peso es demasiado.",
+      "Contrae los isquiotibiales al máximo al llegar arriba y baja de forma controlada.",
+      "La versión tumbado activa más la cabeza larga del bíceps femoral que la versión sentado."
+    ],
+    "tipo": "maquina",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "leg-extension",
+    "nombre": "Extensión de piernas (Leg Extension)",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": [],
+    "equipamiento": "Máquina",
+    "descripcion": "Aislamiento de cuádriceps en máquina. Se extiende la rodilla levantando el peso.",
+    "tips": [
+      "Ajusta el respaldo para que las rodillas queden al borde del asiento alineadas con el eje de la máquina.",
+      "Extiende completamente para contraer el cuádriceps al máximo, pero no bloquees la rodilla con fuerza.",
+      "Baja de forma controlada — no dejes caer el peso.",
+      "Si sientes dolor en la rodilla, reduce el peso antes de continuar."
+    ],
+    "tipo": "maquina",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "elevacion-talones",
+    "nombre": "Elevación de talones (Pantorrilla de pie)",
+    "musculo_principal": "Gastrocnemio",
+    "musculos_secundarios": ["Sóleo"],
+    "equipamiento": "Máquina, escalón o peso corporal",
+    "descripcion": "Ejercicio para las pantorrillas. Se eleva el cuerpo sobre las puntas de los pies.",
+    "tips": [
+      "Realiza el movimiento con rango completo: desde el talón abajo (estiramiento) hasta las puntas al máximo.",
+      "Mantén la contracción en la parte alta por 1-2 segundos antes de bajar.",
+      "Las pantorrillas responden bien a repeticiones altas (15-25).",
+      "Usa un escalón para el estiramiento completo — en suelo plano se reduce el rango útil."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "hip-thrust",
+    "nombre": "Hip Thrust",
+    "musculo_principal": "Glúteos",
+    "musculos_secundarios": ["Isquiotibiales", "Core"],
+    "equipamiento": "Barra o máquina",
+    "descripcion": "El mejor ejercicio para el desarrollo de los glúteos. Se apoya la espalda alta en un banco y se empuja la barra hacia arriba con las caderas.",
+    "tips": [
+      "Coloca la barra sobre las caderas, no sobre el abdomen ni los muslos. Usa un pad para protección.",
+      "Empuja apretando los glúteos — el movimiento viene de los glúteos, no de la espalda baja.",
+      "En la posición alta, el torso debe quedar paralelo al suelo y las espinillas verticales.",
+      "Mantén la barbilla pegada al pecho durante todo el movimiento para no arquear el cuello."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "sentadilla-bulgara",
+    "nombre": "Sentadilla búlgara (Bulgarian Split Squat)",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales"],
+    "equipamiento": "Banco, mancuernas o barra",
+    "descripcion": "Sentadilla unilateral con el pie trasero elevado en un banco. Muy exigente para el equilibrio y el cuádriceps.",
+    "tips": [
+      "El pie delantero debe estar lo suficientemente adelante para que la espinilla quede vertical al bajar.",
+      "La rodilla delantera sigue la dirección del pie — no dejes que colapse hacia adentro.",
+      "Baja controladamente hasta que la rodilla trasera casi toque el suelo.",
+      "Al inicio, practica sin peso para encontrar el equilibrio. Luego agrega mancuernas o barra."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "sentadilla-sumo",
+    "nombre": "Sentadilla sumo",
+    "musculo_principal": "Glúteos",
+    "musculos_secundarios": ["Cuádriceps", "Aductores", "Isquiotibiales"],
+    "equipamiento": "Barra o mancuerna",
+    "descripcion": "Sentadilla con pies muy separados y puntas hacia afuera. Activa más los glúteos y el interior de los muslos que la sentadilla convencional.",
+    "tips": [
+      "Pies más anchos que los hombros con las puntas giradas 30-45° hacia fuera.",
+      "Las rodillas deben empujarse hacia afuera siguiendo la dirección de los pies.",
+      "El torso puede permanecer más erguido que en la sentadilla convencional.",
+      "Con una mancuerna sostenida con ambas manos (goblet sumo) es una variante muy accesible."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "sentadilla-goblet",
+    "nombre": "Sentadilla goblet (Goblet Squat)",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Core", "Isquiotibiales"],
+    "equipamiento": "Mancuerna o kettlebell",
+    "descripcion": "Sentadilla con el peso sostenido en el pecho con ambas manos. Excelente para aprender la técnica y mantener el torso erguido.",
+    "tips": [
+      "Sostén la mancuerna verticalmente cerca del pecho durante todo el movimiento.",
+      "El peso delante actúa como contrapeso y facilita mantener el torso erguido.",
+      "Excelente ejercicio técnico para quienes tienen dificultad manteniendo el torso derecho.",
+      "Baja profundo — el goblet facilita la profundidad más que la sentadilla con barra."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "hack-squat",
+    "nombre": "Sentadilla Hack (Hack Squat)",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales"],
+    "equipamiento": "Máquina Hack Squat",
+    "descripcion": "Sentadilla en máquina inclinada. Permite cargar mucho peso con menor estrés en la espalda que la sentadilla con barra.",
+    "tips": [
+      "La máquina guía el movimiento, reduciendo la necesidad de equilibrio comparado con la sentadilla libre.",
+      "Pies a la anchura de caderas. Subirlos activa más glúteos; bajarlos, más cuádriceps.",
+      "Baja hasta que los muslos queden paralelos a la plataforma o más abajo.",
+      "No bloquees completamente las rodillas al extender — mantén una leve flexión."
+    ],
+    "tipo": "maquina",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "zancadas-caminando",
+    "nombre": "Zancadas caminando",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales"],
+    "equipamiento": "Mancuernas o peso corporal",
+    "descripcion": "Variante dinámica de las zancadas en la que se avanza paso a paso. Añade componente de equilibrio y es más demandante.",
+    "tips": [
+      "Da pasos largos y constantes — la longitud del paso determina qué músculo trabaja más.",
+      "La rodilla trasera baja casi hasta el suelo en cada paso.",
+      "Mantén el torso erguido y la mirada hacia adelante.",
+      "Con mancuernas a los lados es la variante más común. Con la barra en la espalda aumenta la dificultad."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "step-up",
+    "nombre": "Step-up (Subida al cajón)",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales"],
+    "equipamiento": "Cajón o banco, mancuernas opcionales",
+    "descripcion": "Ejercicio unilateral para el tren inferior. Se sube a una plataforma con una pierna y se baja de forma controlada.",
+    "tips": [
+      "El pie completo debe quedar apoyado en el cajón — no solo la punta.",
+      "Empuja con el talón de la pierna que está en el cajón para activar más el glúteo.",
+      "La pierna de abajo solo ayuda al inicio — el trabajo principal lo hace la pierna del cajón.",
+      "La altura del cajón cambia el estímulo: más alto = más glúteo; más bajo = más cuádriceps."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "elevacion-talones-sentado",
+    "nombre": "Elevación de talones sentado (Sóleo)",
+    "musculo_principal": "Sóleo",
+    "musculos_secundarios": ["Gastrocnemio"],
+    "equipamiento": "Máquina de pantorrillas sentado o mancuernas en rodillas",
+    "descripcion": "Con las rodillas dobladas el gastrocnemio queda inactivo y el sóleo toma casi todo el trabajo.",
+    "tips": [
+      "Con las rodillas a 90°, el gastrocnemio queda en insuficiencia activa — el sóleo hace todo.",
+      "El sóleo responde muy bien a repeticiones altas (15-25) con cargas moderadas.",
+      "Rango de movimiento completo: desde el estiramiento máximo hasta la contracción máxima.",
+      "Mantén la contracción en la parte alta por 1-2 segundos antes de bajar."
+    ],
+    "tipo": "maquina",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "abduccion-cadera",
+    "nombre": "Abducción de cadera en máquina",
+    "musculo_principal": "Glúteo medio",
+    "musculos_secundarios": ["Glúteo menor", "TFL"],
+    "equipamiento": "Máquina de abducción",
+    "descripcion": "Aislamiento del glúteo medio y menor. Se empujan las piernas hacia afuera contra la resistencia de la máquina.",
+    "tips": [
+      "Siéntate erguido con la espalda apoyada — no te inclines hacia adelante para ayudar.",
+      "Empuja lentamente hacia afuera y regresa aún más lento — la fase excéntrica es crucial.",
+      "Un glúteo medio fuerte mejora la estabilidad de la rodilla y la postura.",
+      "Ideal como activación antes de sentadillas o como accesorio al final del entreno de piernas."
+    ],
+    "tipo": "maquina",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "aduccion-cadera",
+    "nombre": "Aducción de cadera en máquina",
+    "musculo_principal": "Aductores",
+    "musculos_secundarios": ["Grácil", "Pectíneo"],
+    "equipamiento": "Máquina de aducción",
+    "descripcion": "Aislamiento de los músculos del interior del muslo. Las piernas se juntan contra la resistencia de la máquina.",
+    "tips": [
+      "Siéntate con la espalda apoyada y empuja las piernas hacia adentro de forma controlada.",
+      "Regresa lentamente a la posición inicial — el estiramiento de los aductores en la bajada es importante.",
+      "Los aductores contribuyen a la estabilidad de la cadera y la rodilla.",
+      "No uses demasiado peso al principio — los aductores se sobrecargan fácilmente si están poco entrenados."
+    ],
+    "tipo": "maquina",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "glute-bridge",
+    "nombre": "Glute Bridge (Puente de glúteos)",
+    "musculo_principal": "Glúteos",
+    "musculos_secundarios": ["Isquiotibiales", "Core"],
+    "equipamiento": "Ninguno o barra",
+    "descripcion": "Versión en el suelo del hip thrust. Acostado boca arriba, se elevan las caderas apretando los glúteos. Ideal como activación.",
+    "tips": [
+      "Acuéstate boca arriba con las rodillas dobladas y los pies cerca de los glúteos.",
+      "Empuja las caderas hacia el techo apretando los glúteos — el movimiento viene de los glúteos, no de la espalda baja.",
+      "Mantén la posición alta por 1-2 segundos antes de bajar.",
+      "La versión unilateral (una pierna) es significativamente más difícil y efectiva."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "box-jump",
+    "nombre": "Salto al cajón (Box Jump)",
+    "musculo_principal": "Cuádriceps",
+    "musculos_secundarios": ["Glúteos", "Isquiotibiales", "Pantorrillas"],
+    "equipamiento": "Cajón o plataforma",
+    "descripcion": "Ejercicio pliométrico que desarrolla la potencia explosiva del tren inferior. Se salta a una plataforma y se baja con control.",
+    "tips": [
+      "El salto debe ser explosivo con los brazos ayudando el impulso.",
+      "Aterriza con ambos pies a la vez con las rodillas ligeramente flexionadas — nunca con las piernas rectas.",
+      "Baja del cajón dando un paso, no saltando hacia atrás — bajar saltando aumenta el riesgo de lesión.",
+      "Empieza con cajones bajos y aumenta la altura gradualmente."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Piernas"
+  },
+  {
+    "id": "plancha",
+    "nombre": "Plancha (Plank)",
+    "musculo_principal": "Core (transverso abdominal)",
+    "musculos_secundarios": ["Recto abdominal", "Glúteos", "Hombros"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Ejercicio isométrico de core. Se mantiene la posición de barra apoyando codos y puntas de los pies.",
+    "tips": [
+      "El cuerpo debe formar una línea recta de cabeza a talones — ni caderas arriba ni abajo.",
+      "Aprieta los glúteos y el core durante toda la duración.",
+      "Empuja el suelo con los codos hacia adelante para activar más los abdominales.",
+      "Una plancha de 20 segundos bien hecha es mejor que una de 60 segundos mal hecha."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "crunch",
+    "nombre": "Crunch abdominal",
+    "musculo_principal": "Recto abdominal",
+    "musculos_secundarios": ["Oblicuos"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Ejercicio básico para el abdomen. Se flexiona el torso hacia arriba desde la posición acostada.",
+    "tips": [
+      "El movimiento es pequeño — solo despega los hombros del suelo, no el torso completo.",
+      "Mantén el cuello neutro: no jales la cabeza con las manos.",
+      "Exhala al subir, inhala al bajar — la respiración activa más el core.",
+      "Lento y controlado es más efectivo que rápido y sin control."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "rueda-abdominal",
+    "nombre": "Rueda abdominal (Ab Wheel)",
+    "musculo_principal": "Recto abdominal",
+    "musculos_secundarios": ["Dorsal", "Core", "Hombros"],
+    "equipamiento": "Rueda abdominal",
+    "descripcion": "Uno de los ejercicios más efectivos y difíciles para el core. Se rueda hacia adelante desde la posición arrodillada manteniendo el cuerpo recto.",
+    "tips": [
+      "Empieza desde las rodillas, no de pie — de pie es extremadamente difícil.",
+      "El core debe estar apretado antes de empezar a rodar.",
+      "Rueda solo hasta donde puedas mantener la espalda recta.",
+      "Si es demasiado difícil, reduce el rango de movimiento (rueda solo 30-40 cm) hasta ganar fuerza."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "elevacion-piernas",
+    "nombre": "Elevación de piernas tumbado",
+    "musculo_principal": "Recto abdominal inferior",
+    "musculos_secundarios": ["Flexores de cadera"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Acostado, se elevan las piernas desde el suelo hasta la vertical manteniendo la espalda baja pegada al suelo.",
+    "tips": [
+      "La zona lumbar debe permanecer pegada al suelo en todo momento — si se despega, reduce el rango.",
+      "Baja las piernas solo hasta donde puedas mantener la espalda pegada al suelo.",
+      "Las piernas ligeramente flexionadas hacen el ejercicio más accesible; completamente rectas, más difícil.",
+      "Exhala al subir las piernas — eso activa más el core."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "twist-ruso",
+    "nombre": "Twist ruso (Russian Twist)",
+    "musculo_principal": "Oblicuos",
+    "musculos_secundarios": ["Recto abdominal"],
+    "equipamiento": "Ninguno, mancuerna o disco",
+    "descripcion": "Ejercicio de rotación de tronco para los oblicuos. Sentado en el suelo, se gira el torso de lado a lado.",
+    "tips": [
+      "Inclina el torso hacia atrás a unos 45° y eleva los pies del suelo para mayor dificultad.",
+      "El movimiento de rotación viene de la cintura, no del balanceo de los brazos.",
+      "Con un disco o mancuerna en las manos el ejercicio se vuelve mucho más intenso.",
+      "Toca el suelo con las manos a cada lado en cada repetición para asegurar el rango completo."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "crunch-bicicleta",
+    "nombre": "Crunch en bicicleta (Bicycle Crunch)",
+    "musculo_principal": "Oblicuos",
+    "musculos_secundarios": ["Recto abdominal", "Flexores de cadera"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Combinación de crunch con rotación y movimiento alternado de piernas. Uno de los ejercicios abdominales más completos.",
+    "tips": [
+      "El movimiento es opuesto: codo derecho va hacia rodilla izquierda y viceversa.",
+      "La pierna que no se acerca al codo se extiende casi horizontalmente — no la dejes caer al suelo.",
+      "Lento y controlado es mejor que rápido y sin control.",
+      "Mantén las manos detrás de la cabeza sin jalar el cuello."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "plancha-lateral",
+    "nombre": "Plancha lateral (Side Plank)",
+    "musculo_principal": "Oblicuos",
+    "musculos_secundarios": ["Core", "Glúteo medio"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Variante lateral de la plancha que aísla los oblicuos y trabaja la estabilidad lateral del core.",
+    "tips": [
+      "El cuerpo debe formar una línea recta desde la cabeza hasta los pies — no dejes que las caderas caigan.",
+      "Apoya el antebrazo con el codo directamente bajo el hombro.",
+      "Para hacerlo más fácil, apoya la rodilla inferior en el suelo. Para más difícil, eleva la pierna superior.",
+      "La plancha lateral complementa perfectamente la plancha frontal para un core completo."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "crunch-polea",
+    "nombre": "Crunch en polea (Cable Crunch)",
+    "musculo_principal": "Recto abdominal",
+    "musculos_secundarios": ["Oblicuos"],
+    "equipamiento": "Polea alta con cuerda",
+    "descripcion": "Crunch con resistencia de polea. Uno de los pocos ejercicios que permite progresar en carga para los abdominales.",
+    "tips": [
+      "Arrodíllate frente a la polea y agarra la cuerda detrás de la cabeza.",
+      "El movimiento es de flexión de columna: llevas los codos hacia las rodillas curvando la espalda — no jales con los brazos.",
+      "Úsalo para progresar en los abdominales de la misma forma que progresas en otros ejercicios.",
+      "No uses tanto peso que tengas que jalar con los hombros en lugar de contraer el abdomen."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Core"
+  },
+  {
+    "id": "elevacion-piernas-barra",
+    "nombre": "Elevación de piernas colgado (Hanging Leg Raise)",
+    "musculo_principal": "Recto abdominal inferior",
+    "musculos_secundarios": ["Flexores de cadera", "Core"],
+    "equipamiento": "Barra fija",
+    "descripcion": "Elevación de piernas colgado de una barra. Uno de los ejercicios más exigentes para el abdomen inferior.",
+    "tips": [
+      "Cuelga de la barra con los brazos completamente extendidos y el core apretado.",
+      "Eleva las piernas rectas hasta la horizontal o más arriba.",
+      "Controla el descenso — no balancees el cuerpo ni uses impulso para subir.",
+      "Si las piernas rectas son demasiado difíciles, empieza elevando las rodillas al pecho."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "mountain-climbers",
+    "nombre": "Mountain Climbers",
+    "musculo_principal": "Core",
+    "musculos_secundarios": ["Hombros", "Cuádriceps"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Ejercicio dinámico de core en posición de plancha. Se llevan las rodillas alternadamente hacia el pecho en rápida sucesión.",
+    "tips": [
+      "Mantén las caderas bajas y el cuerpo en línea de plancha durante todo el ejercicio.",
+      "El core apretado evita que las caderas suban al llevar la rodilla hacia el pecho.",
+      "A baja velocidad trabajan más los abdominales; a alta velocidad se convierte en cardio.",
+      "Mantén los hombros sobre las muñecas y no los dejes irse hacia adelante."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "dead-bug",
+    "nombre": "Dead Bug",
+    "musculo_principal": "Core (transverso abdominal)",
+    "musculos_secundarios": ["Recto abdominal"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Estabilización de core acostado boca arriba. Se extienden alternadamente el brazo y la pierna opuestos manteniendo la espalda pegada al suelo.",
+    "tips": [
+      "La zona lumbar DEBE permanecer pegada al suelo en todo momento — ese es el desafío.",
+      "Exhala lentamente al extender el brazo y la pierna — activa el transverso abdominal.",
+      "El movimiento es lento y controlado — si lo haces rápido, pierdes la activación del core profundo.",
+      "Excelente para principiantes y como ejercicio de rehabilitación de espalda baja."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "elevacion-rodillas-barra",
+    "nombre": "Elevación de rodillas colgado (Hanging Knee Raise)",
+    "musculo_principal": "Recto abdominal",
+    "musculos_secundarios": ["Flexores de cadera"],
+    "equipamiento": "Barra fija",
+    "descripcion": "Versión accesible de la elevación de piernas colgado. Se elevan las rodillas hasta el pecho en lugar de las piernas rectas.",
+    "tips": [
+      "Cuelga de la barra y eleva las rodillas hacia el pecho en un movimiento controlado.",
+      "Evita el balanceo del cuerpo — el movimiento debe ser solo de las rodillas hacia arriba.",
+      "Una vez que puedas hacer 3 series de 15 reps limpias, pasa a la versión con piernas extendidas.",
+      "En cada repetición baja completamente antes de volver a subir."
+    ],
+    "tipo": "peso_corporal",
+    "categoria": "Core"
+  },
+  {
+    "id": "wood-chop",
+    "nombre": "Giro oblicuo en polea (Wood Chop)",
+    "musculo_principal": "Oblicuos",
+    "musculos_secundarios": ["Core", "Hombros"],
+    "equipamiento": "Polea",
+    "descripcion": "Movimiento de rotación de tronco en polea que simula el gesto de cortar leña. Uno de los mejores ejercicios para los oblicuos con resistencia.",
+    "tips": [
+      "El movimiento es diagonal: desde arriba-afuera hasta abajo-adentro (o al revés en la versión inversa).",
+      "El giro viene de la rotación del tronco, no del balanceo de los brazos.",
+      "Los pies plantados y las caderas relativamente estables — el torso es lo que gira.",
+      "Trabaja ambos lados por igual para no generar desequilibrios musculares."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Core"
+  },
+  {
+    "id": "cinta-correr",
+    "nombre": "Carrera en cinta (Treadmill)",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Cuádriceps", "Pantorrillas", "Glúteos"],
+    "equipamiento": "Cinta de correr",
+    "descripcion": "Cardio estándar en cinta. Controla la velocidad e inclinación para variar la intensidad.",
+    "tips": [
+      "Para resistencia: 30-45 minutos a velocidad moderada. Para condición: intervalos de alta intensidad.",
+      "Aumentar la inclinación al 1-2% simula correr al aire libre y activa más los glúteos.",
+      "No te apoyes en las barras laterales — reduce significativamente el gasto calórico.",
+      "El calentamiento a baja velocidad durante 5 minutos antes de ejercicios de piernas protege las articulaciones."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "bicicleta-estatica",
+    "nombre": "Bicicleta estática",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Cuádriceps", "Glúteos", "Pantorrillas"],
+    "equipamiento": "Bicicleta estática",
+    "descripcion": "Cardio de bajo impacto articular. Ideal para recuperación activa y personas con problemas de rodilla o cadera.",
+    "tips": [
+      "Ajusta la altura del asiento: la rodilla debe quedar ligeramente flexionada al fondo del pedaleo.",
+      "El bajo impacto la hace ideal para días de recuperación o si tienes lesiones en rodillas.",
+      "Alternar entre resistencia alta y baja es una forma efectiva de hacer intervalos.",
+      "20-40 minutos a intensidad moderada es suficiente como cardio complementario al entrenamiento."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "remo-ergometro",
+    "nombre": "Remo en máquina (Rowing Machine)",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Espalda", "Bíceps", "Piernas"],
+    "equipamiento": "Máquina de remo (ergómetro)",
+    "descripcion": "Cardio de cuerpo completo: piernas, espalda y brazos. Excelente quemador de calorías con bajo impacto articular.",
+    "tips": [
+      "El movimiento correcto es 60% piernas, 20% core y 20% brazos — no al revés.",
+      "Empuja primero con las piernas, luego inclina el torso hacia atrás, luego tira con los brazos.",
+      "Mantén la espalda erguida y no redondees los hombros al tirar.",
+      "Trabaja el cuerpo completo, lo que lo hace uno de los cardios más eficientes en tiempo."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "eliptica",
+    "nombre": "Elíptica (Elliptical)",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Cuádriceps", "Glúteos", "Hombros"],
+    "equipamiento": "Máquina elíptica",
+    "descripcion": "Cardio de impacto casi cero que simula correr sin el golpe articular. Involucra también el tren superior.",
+    "tips": [
+      "Usa el movimiento de los brazos activamente — no dejes que solo vayan de paseo.",
+      "Mantén el torso erguido y no te apoyes sobre las barras.",
+      "Ir hacia atrás en la elíptica activa más los glúteos e isquiotibiales.",
+      "Ideal para personas con problemas de rodilla, cadera o espalda que quieren cardio sin impacto."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "cuerda-saltar",
+    "nombre": "Cuerda de saltar (Jump Rope)",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Pantorrillas", "Hombros"],
+    "equipamiento": "Cuerda de saltar",
+    "descripcion": "Uno de los cardios más eficientes por unidad de tiempo. Quema muchas calorías y mejora la coordinación.",
+    "tips": [
+      "Salta solo lo necesario para que la cuerda pase — saltar demasiado alto cansa más sin beneficio extra.",
+      "El movimiento viene de las muñecas, no de los hombros — los codos pegados al cuerpo.",
+      "Empieza con series cortas (30-60 segundos) con descanso y aumenta gradualmente.",
+      "Las pantorrillas se fatigarán rápido al principio — es normal, se adaptan en pocas semanas."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "escaladora",
+    "nombre": "Escaladora (Stair Climber)",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Glúteos", "Cuádriceps", "Pantorrillas"],
+    "equipamiento": "Máquina escaladora",
+    "descripcion": "Simula subir escaleras. Alta intensidad relativa con bajo impacto. Excelente para glúteos y condición cardiovascular.",
+    "tips": [
+      "No te apoyes en las barras — reduce el trabajo muscular y el gasto calórico.",
+      "Mantén el torso erguido, no te inclines hacia adelante.",
+      "Pasos largos activan más los glúteos; pasos cortos y rápidos, más cardiovascular.",
+      "15-20 minutos en escaladora equivalen en intensidad a 30-40 minutos en cinta a paso moderado."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "burpees",
+    "nombre": "Burpees",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Pecho", "Hombros", "Cuádriceps", "Core"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Ejercicio de alta intensidad que combina una flexión, una sentadilla y un salto. Trabaja el cuerpo completo.",
+    "tips": [
+      "El movimiento completo: de pie → sentadilla → manos al suelo → plancha → flexión → vuelta → salto con brazos arriba.",
+      "La flexión puede omitirse para una versión más accesible.",
+      "Es mejor hacerlos perfectos y lentos que rápidos y mal — la calidad antes que la velocidad.",
+      "10 burpees bien hechos son suficientes para elevar el ritmo cardíaco significativamente."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "kettlebell-swing",
+    "nombre": "Kettlebell Swing",
+    "musculo_principal": "Glúteos",
+    "musculos_secundarios": ["Isquiotibiales", "Core", "Espalda baja"],
+    "equipamiento": "Kettlebell",
+    "descripcion": "Movimiento de bisagra de cadera explosivo. Excelente combinación de fuerza posterior y cardio.",
+    "tips": [
+      "El movimiento es una bisagra de cadera (como el peso muerto rumano), NO una sentadilla.",
+      "La potencia viene de los glúteos y las caderas que se extienden explosivamente, no de los brazos.",
+      "Deja que el kettlebell suba solo por el impulso de las caderas — no lo levantes con los brazos.",
+      "El swing ruso llega a la altura de los hombros; el americano llega sobre la cabeza."
+    ],
+    "tipo": "fuerza",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "spinning",
+    "nombre": "Bicicleta de spinning (Indoor Cycling)",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Cuádriceps", "Glúteos", "Isquiotibiales"],
+    "equipamiento": "Bicicleta de spinning",
+    "descripcion": "Ciclismo de alta intensidad en bicicleta estática diseñada para ello. Intervalos de alta y baja intensidad.",
+    "tips": [
+      "Ajusta el asiento al nivel de la cadera cuando estés de pie junto a la bicicleta.",
+      "Las clases alternan entre esfuerzo máximo y recuperación — el concepto de intervalos.",
+      "Aumentar la resistencia simula subir cuestas; reducirla, terreno plano.",
+      "El spinning está diseñado para alta intensidad — no es para ir cómodo."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  },
+  {
+    "id": "saltos-tijera",
+    "nombre": "Saltos de tijera (Jumping Jacks)",
+    "musculo_principal": "Cardio (sistema cardiovascular)",
+    "musculos_secundarios": ["Hombros", "Glúteo medio", "Pantorrillas"],
+    "equipamiento": "Ninguno",
+    "descripcion": "Ejercicio de cardio básico sin equipamiento. Ideal para calentamiento o como parte de circuitos de alta intensidad.",
+    "tips": [
+      "Aterriza suavemente con las rodillas ligeramente flexionadas para reducir el impacto.",
+      "Lleva los brazos completamente arriba en cada repetición — no hagas el movimiento a medias.",
+      "Ideales para calentar al inicio del entrenamiento o en circuitos HIIT.",
+      "La versión sin impacto (solo abrir y cerrar las piernas alternando el paso) es útil si tienes problemas articulares."
+    ],
+    "tipo": "cardio",
+    "categoria": "Cardio"
+  }
+]
