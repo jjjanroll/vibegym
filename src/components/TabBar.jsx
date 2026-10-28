@@ -55,7 +55,7 @@ export default function TabBar({ active, onChange }) {
           <button
             key={t.id}
             onClick={() => onChange(t.id)}
-            className={`flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors ${
+            className={`flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors active:scale-95 transition-transform duration-100 ${
               active === t.id ? 'text-[#30D158]' : 'text-[#8E8E93]'
             }`}
           >

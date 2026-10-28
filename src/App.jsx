@@ -192,7 +192,7 @@ export default function App() {
         </div>
       )}
 
-      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+      <div key={tab} className="tab-enter flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <Screen
           onIniciar={tab === 'entrenar' ? iniciarEntrenamiento : undefined}
           user={tab === 'entrenar' ? userActual : undefined}
