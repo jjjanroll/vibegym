@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getAllExercises } from '../db'
+import ExerciseDetailSheet from '../components/ExerciseDetailSheet'
 
 const CATEGORIAS = ['Todas', 'Pecho', 'Espalda', 'Hombros', 'Bíceps', 'Tríceps', 'Piernas', 'Core', 'Cardio']
 
@@ -18,6 +19,7 @@ export default function SelectorEjercicios({ onSeleccionar, onCerrar }) {
   const [ejercicios, setEjercicios] = useState([])
   const [categoria, setCategoria] = useState('Todas')
   const [busqueda, setBusqueda] = useState('')
+  const [sheetEj, setSheetEj] = useState(null)
 
   useEffect(() => {
     getAllExercises().then(todos =>
@@ -32,6 +34,7 @@ export default function SelectorEjercicios({ onSeleccionar, onCerrar }) {
   })
 
   return (
+    <>
     <div className="flex flex-col h-full bg-black">
 
       {/* Header */}
@@ -96,31 +99,46 @@ export default function SelectorEjercicios({ onSeleccionar, onCerrar }) {
           ) : filtrados.map(e => {
             const s = CATEGORIA_STYLE[e.categoria] ?? { bg: '#8E8E93', text: '?' }
             return (
-              <button
-                key={e.id}
-                onClick={() => onSeleccionar(e)}
-                className="w-full px-4 py-3 flex items-center gap-3 active:bg-[#2C2C2E] text-left"
-              >
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold text-black"
-                  style={{ backgroundColor: s.bg }}
+              <div key={e.id} className="flex items-center divide-x divide-[#38383A]">
+                <button
+                  onClick={() => onSeleccionar(e)}
+                  className="flex-1 px-4 py-3 flex items-center gap-3 active:bg-[#2C2C2E] text-left"
                 >
-                  {s.text}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white text-base font-medium leading-tight truncate">{e.nombre}</p>
-                  <p className="text-[#8E8E93] text-sm">{e.musculoPrincipal}</p>
-                </div>
-                <svg viewBox="0 0 24 24" fill="none" stroke="#38383A" strokeWidth="2.5"
-                     strokeLinecap="round" strokeLinejoin="round" width="16" height="16" className="shrink-0">
-                  <path d="M9 18l6-6-6-6"/>
-                </svg>
-              </button>
+                  <div
+                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold text-black"
+                    style={{ backgroundColor: s.bg }}
+                  >
+                    {s.text}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-base font-medium leading-tight truncate">{e.nombre}</p>
+                    <p className="text-[#8E8E93] text-sm">{e.musculoPrincipal}</p>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setSheetEj(e)}
+                  className="shrink-0 w-11 h-full py-3 flex items-center justify-center active:bg-[#2C2C2E]"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#8E8E93" strokeWidth="1.8"
+                       strokeLinecap="round" width="18" height="18">
+                    <circle cx="12" cy="12" r="9"/>
+                    <line x1="12" y1="8" x2="12" y2="8.5" strokeWidth="2.5"/>
+                    <line x1="12" y1="11.5" x2="12" y2="16"/>
+                  </svg>
+                </button>
+              </div>
             )
           })}
         </div>
       </div>
 
     </div>
+
+    <ExerciseDetailSheet
+      ejercicio={sheetEj}
+      onCerrar={() => setSheetEj(null)}
+      onAgregar={e => { onSeleccionar(e); setSheetEj(null) }}
+    />
+    </>
   )
 }

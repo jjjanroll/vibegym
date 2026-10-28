@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { saveWorkout, saveWorkoutExercise, saveSet, deleteSet, deleteWorkoutCompleto, getLastSetsForExercise, getUser, getWorkoutExercises, getExercise, getSets, getWorkout } from '../db'
+import { saveWorkout, saveWorkoutExercise, saveSet, deleteSet, deleteWorkoutExercise, deleteWorkoutCompleto, getLastSetsForExercise, getUser, getWorkoutExercises, getExercise, getSets, getWorkout } from '../db'
 import DumbbellIcon from '../components/DumbbellIcon'
 import SelectorEjercicios from './SelectorEjercicios'
+import ExerciseDetailSheet from '../components/ExerciseDetailSheet'
 
 const TIMER_DEFAULT_FALLBACK = 90
 
@@ -50,10 +51,11 @@ function formatTiempo(s) {
   return `${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
 }
 
-function formatAnterior(peso, reps) {
+function formatAnterior(peso, reps, unidad = 'kg') {
   if (!peso && !reps) return '—'
-  if (peso && reps) return `${peso}kg × ${reps}`
-  if (peso) return `${peso}kg`
+  const pd = peso && unidad === 'lb' ? +(peso * 2.205).toFixed(1) : peso
+  if (peso && reps) return `${pd}${unidad} × ${reps}`
+  if (peso) return `${pd}${unidad}`
   return `× ${reps}`
 }
 
@@ -68,8 +70,12 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
   const [timer, setTimer] = useState(null)
   const [timerDefault, setTimerDefault] = useState(TIMER_DEFAULT_FALLBACK)
   const [longPressSet, setLongPressSet] = useState(null) // { iIdx, sIdx } | null
+  const [longPressEj, setLongPressEj] = useState(null)   // iIdx | null
+  const [detalleEj, setDetalleEj] = useState(null) // ejercicio completo para el sheet
+  const [unidad, setUnidad] = useState('kg')
   const inicioRef = useRef(Date.now())
   const longPressTimerRef = useRef(null)
+  const longPressEjTimerRef = useRef(null)
   const dismissTimerRef = useRef(null)
 
   // Cargar estado existente (resume o desde plantilla)
@@ -80,6 +86,8 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
         getWorkoutExercises(workoutId),
         getWorkout(workoutId),
       ])
+      const unitActual = user?.unidad ?? 'kg'
+      setUnidad(unitActual)
       if (user?.timerSegundos) setTimerDefault(user.timerSegundos)
       if (workout?.fechaInicio) {
         const elapsed = Math.floor((Date.now() - new Date(workout.fechaInicio)) / 1000)
@@ -101,7 +109,8 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
           sets: sets.length > 0
             ? sets.map(s => ({
                 id: s.id, orden: s.orden,
-                peso: s.peso ?? '', reps: s.reps ?? '',
+                peso: s.peso != null ? (unitActual === 'lb' ? +(s.peso * 2.205).toFixed(1) : s.peso) : '',
+                reps: s.reps ?? '',
                 tiempo: s.tiempo ?? '', distancia: s.distancia ?? '',
                 completada: s.completada,
               }))
@@ -229,6 +238,26 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
     eliminarSerie(iIdx, sIdx)
   }
 
+  function iniciarLongPressEj(iIdx) {
+    clearTimeout(longPressEjTimerRef.current)
+    longPressEjTimerRef.current = setTimeout(() => {
+      navigator.vibrate?.(40)
+      setLongPressEj(iIdx)
+    }, 500)
+  }
+
+  function cancelarLongPressEj() {
+    clearTimeout(longPressEjTimerRef.current)
+  }
+
+  async function eliminarEjercicio(iIdx) {
+    const item = items[iIdx]
+    await deleteWorkoutExercise(item.weId)
+    if (timer?.exerciseIdx === iIdx) setTimer(null)
+    setLongPressEj(null)
+    setItems(prev => prev.filter((_, i) => i !== iIdx))
+  }
+
   function actualizarValor(iIdx, sIdx, campo, valor) {
     setItems(prev => prev.map((it, i) => i !== iIdx ? it : {
       ...it,
@@ -259,7 +288,7 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
       id:                set.id,
       workoutExerciseId: item.weId,
       orden:             set.orden,
-      peso:              parseFloat(set.peso) || null,
+      peso:              toKg(set.peso) || null,
       reps:              parseInt(set.reps)   || null,
       completada,
       notas: null,
@@ -291,7 +320,7 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
       id:                set.id,
       workoutExerciseId: item.weId,
       orden:             set.orden,
-      peso:              esCardio ? null : (parseFloat(set.peso) || null),
+      peso:              esCardio ? null : (toKg(set.peso) || null),
       reps:              esCardio ? null : (parseInt(set.reps)   || null),
       tiempo:            esCardio ? (parseFloat(set.tiempo) || null) : null,
       distancia:         esCardio ? (parseFloat(set.distancia) || null) : null,
@@ -310,6 +339,16 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
     onCancelar()
   }
 
+  const toDisplay = (kg) => {
+    if (kg == null || kg === '') return ''
+    return unidad === 'lb' ? +(kg * 2.205).toFixed(1) : kg
+  }
+  const toKg = (val) => {
+    const n = parseFloat(val)
+    if (!n) return null
+    return unidad === 'lb' ? +(n / 2.205).toFixed(3) : n
+  }
+
   const seriesCompletadas = items.reduce((n, it) => n + it.sets.filter(s => s.completada).length, 0)
 
   if (seleccionando) {
@@ -322,6 +361,7 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
   }
 
   return (
+    <>
     <div className="flex flex-col" style={{ height: '100%' }}>
 
       {/* ── Header ── */}
@@ -366,17 +406,63 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
           return (
             <div key={item.weId} className="mx-4 mt-4 bg-[#1C1C1E] rounded-2xl overflow-hidden">
 
-              {/* Nombre + notas */}
-              <div className="px-4 pt-3 pb-2 border-b border-[#38383A]">
-                <p className="text-[#30D158] font-semibold text-base">{item.nombre}</p>
-                <input
-                  type="text"
-                  placeholder="Notas del ejercicio..."
-                  value={item.notas}
-                  onChange={e => actualizarNotas(iIdx, e.target.value)}
-                  onBlur={() => guardarNotasEjercicio(iIdx)}
-                  className="text-[#8E8E93] text-sm bg-transparent w-full outline-none placeholder-[#3A3A3C] mt-1"
-                />
+              {/* Nombre + ⓘ + notas */}
+              <div
+                className={`px-4 pt-3 pb-2 border-b border-[#38383A] transition-colors ${longPressEj === iIdx ? 'bg-[#FF3B30]/15' : ''}`}
+                onTouchStart={() => iniciarLongPressEj(iIdx)}
+                onTouchEnd={cancelarLongPressEj}
+                onTouchMove={cancelarLongPressEj}
+                onContextMenu={e => { e.preventDefault(); setLongPressEj(iIdx) }}
+              >
+                {longPressEj === iIdx ? (
+                  <div className="flex items-center gap-2 py-0.5">
+                    <button
+                      onClick={() => eliminarEjercicio(iIdx)}
+                      className="flex-1 text-[#FF3B30] font-semibold text-base text-left"
+                    >
+                      Eliminar ejercicio
+                    </button>
+                    <button
+                      onClick={() => setLongPressEj(null)}
+                      className="shrink-0 w-7 h-7 rounded-full bg-[#2C2C2E] flex items-center justify-center active:opacity-70"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#8E8E93" strokeWidth="2.5"
+                           strokeLinecap="round" width="12" height="12">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => getExercise(item.ejercicioId).then(setDetalleEj)}
+                        className="flex-1 min-w-0 text-left active:opacity-70"
+                      >
+                        <p className="text-[#30D158] font-semibold text-base truncate">{item.nombre}</p>
+                      </button>
+                      <button
+                        onClick={() => getExercise(item.ejercicioId).then(setDetalleEj)}
+                        className="shrink-0 w-7 h-7 rounded-full bg-[#2C2C2E] flex items-center justify-center active:opacity-70"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#8E8E93" strokeWidth="2"
+                             strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
+                          <circle cx="12" cy="12" r="10"/>
+                          <line x1="12" y1="8" x2="12" y2="8" strokeWidth="2.5"/>
+                          <line x1="12" y1="12" x2="12" y2="16"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Notas del ejercicio..."
+                      value={item.notas}
+                      onChange={e => actualizarNotas(iIdx, e.target.value)}
+                      onBlur={() => guardarNotasEjercicio(iIdx)}
+                      className="text-[#8E8E93] text-sm bg-transparent w-full outline-none placeholder-[#3A3A3C] mt-1"
+                    />
+                  </>
+                )}
               </div>
 
               {/* Cabecera columnas — varía según tipo */}
@@ -390,12 +476,12 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
                   </>
                 ) : esPesoCorp ? (
                   <>
-                    <span className="w-[52px] text-center text-[#8E8E93] text-xs font-medium shrink-0">+kg</span>
+                    <span className="w-[52px] text-center text-[#8E8E93] text-xs font-medium shrink-0">+{unidad}</span>
                     <span className="w-[52px] text-center text-[#8E8E93] text-xs font-medium shrink-0">Reps</span>
                   </>
                 ) : (
                   <>
-                    <span className="w-[52px] text-center text-[#8E8E93] text-xs font-medium shrink-0">kg</span>
+                    <span className="w-[52px] text-center text-[#8E8E93] text-xs font-medium shrink-0">{unidad}</span>
                     <span className="w-[52px] text-center text-[#8E8E93] text-xs font-medium shrink-0">Reps</span>
                   </>
                 )}
@@ -410,12 +496,12 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
                 // Texto "Anterior" según tipo
                 const anteriorText = esCardio
                   ? (prev?.tiempo ? `${prev.tiempo}min` : '—')
-                  : formatAnterior(prev?.peso, prev?.reps)
+                  : formatAnterior(prev?.peso, prev?.reps, unidad)
 
                 // Placeholders de los inputs
                 const placeholder1 = esCardio
                   ? (prev?.tiempo ? String(prev.tiempo) : '—')
-                  : (prev?.peso ? String(prev.peso) : '—')
+                  : (prev?.peso ? String(toDisplay(prev.peso)) : '—')
                 const placeholder2 = esCardio
                   ? (prev?.distancia ? String(prev.distancia) : '—')
                   : (prev?.reps ? String(prev.reps) : '—')
@@ -574,5 +660,14 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
         <div style={{ height: 'max(env(safe-area-inset-bottom), 24px)' }} />
       </div>
     </div>
+
+    {/* Sheet de detalle del ejercicio */}
+    {detalleEj && (
+      <ExerciseDetailSheet
+        ejercicio={detalleEj}
+        onCerrar={() => setDetalleEj(null)}
+      />
+    )}
+    </>
   )
 }

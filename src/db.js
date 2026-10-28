@@ -192,14 +192,14 @@ export async function saveWorkout(workout) {
 export async function deleteWorkoutCompleto(workoutId) {
   const db = await getDB()
   const wes = await db.getAllFromIndex('workoutExercises', 'workoutId', workoutId)
-  const tx = db.transaction(['workoutExercises', 'sets'], 'readwrite')
+  const tx = db.transaction(['workouts', 'workoutExercises', 'sets'], 'readwrite')
   for (const we of wes) {
     const sets = await tx.objectStore('sets').index('workoutExerciseId').getAll(we.id)
     for (const s of sets) tx.objectStore('sets').delete(s.id)
     tx.objectStore('workoutExercises').delete(we.id)
   }
+  tx.objectStore('workouts').delete(workoutId)
   await tx.done
-  await db.delete('workouts', workoutId)
 }
 
 export async function getWorkoutExercises(workoutId) {
@@ -211,6 +211,13 @@ export async function getWorkoutExercises(workoutId) {
 export async function saveWorkoutExercise(item) {
   const db = await getDB()
   return db.put('workoutExercises', item)
+}
+
+export async function deleteWorkoutExercise(weId) {
+  const db = await getDB()
+  const sets = await db.getAllFromIndex('sets', 'workoutExerciseId', weId)
+  await Promise.all(sets.map(s => db.delete('sets', s.id)))
+  await db.delete('workoutExercises', weId)
 }
 
 // ── SETS ──────────────────────────────────────────────────────────────────
@@ -275,6 +282,12 @@ export async function getLastSetsForExercise(exerciseId, currentWorkoutId) {
 // No tienen store propio: se derivan de los sets completados.
 // Epley: peso × (1 + reps / 30)
 
+export async function updateEjercicioGif(id, gifUrl) {
+  const db = await getDB()
+  const e = await db.get('exercises', id)
+  if (e) await db.put('exercises', { ...e, gifUrl })
+}
+
 export async function getPRForExercise(exerciseId) {
   const db = await getDB()
   const workoutExercises = await db.getAll('workoutExercises')
@@ -322,6 +335,98 @@ export async function getAllPRs() {
 }
 
 // ── BACKUP ────────────────────────────────────────────────────────────────
+
+export async function importarDatos(json) {
+  if (!json || json.version !== 1) throw new Error('Formato de backup inválido o versión incompatible.')
+  const campos = ['user', 'workouts', 'workoutExercises', 'sets', 'bodyWeights', 'templates', 'templateExercises']
+  for (const c of campos) {
+    if (!Array.isArray(json[c])) throw new Error(`El backup está incompleto: falta "${c}".`)
+  }
+
+  const db = await getDB()
+  const stores = ['user', 'workouts', 'workoutExercises', 'sets', 'bodyWeights', 'templates', 'templateExercises']
+
+  // Limpiar y repoblar cada store en una transacción
+  const tx = db.transaction(stores, 'readwrite')
+  for (const store of stores) {
+    await tx.objectStore(store).clear()
+    for (const item of json[store]) {
+      tx.objectStore(store).put(item)
+    }
+  }
+  await tx.done
+}
+
+// ── RACHA ─────────────────────────────────────────────────────────────────
+
+function getLunes(date) {
+  const d = new Date(date)
+  const day = d.getDay()
+  const diff = day === 0 ? -6 : 1 - day
+  d.setDate(d.getDate() + diff)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
+function weekKey(date) {
+  const lunes = getLunes(date)
+  const year = lunes.getFullYear()
+  const startOfYear = new Date(year, 0, 1)
+  const week = Math.ceil(((lunes - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7)
+  return `${year}-W${String(week).padStart(2, '0')}`
+}
+
+export async function evaluarRacha() {
+  const user = await getUser()
+  if (!user || !user.modaRacha) return user
+
+  const ahora = new Date()
+  const lunesActual = getLunes(ahora)
+  const lunesPasado = new Date(lunesActual)
+  lunesPasado.setDate(lunesPasado.getDate() - 7)
+  const domingoAnterior = new Date(lunesActual)
+  domingoAnterior.setMilliseconds(-1)
+
+  const semanaAnteriorKey = weekKey(lunesPasado)
+
+  if (user.ultimaSemanaEvaluada === semanaAnteriorKey) return user
+
+  if (!user.ultimaSemanaEvaluada) {
+    const updated = { ...user, ultimaSemanaEvaluada: semanaAnteriorKey }
+    await saveUser(updated)
+    return updated
+  }
+
+  const db = await getDB()
+  const todos = await db.getAllFromIndex('workouts', 'fechaInicio')
+  const enSemana = todos.filter(w => {
+    if (!w.fechaFin) return false
+    const f = new Date(w.fechaFin)
+    return f >= lunesPasado && f <= domingoAnterior
+  })
+
+  let { rachaSemanas = 0, rachaMejor = 0, pases = 0, metaSemanal = 3 } = user
+  let paseUsado = false
+
+  if (enSemana.length >= metaSemanal) {
+    rachaSemanas++
+    if (rachaSemanas > rachaMejor) rachaMejor = rachaSemanas
+    if (rachaSemanas % 4 === 0 && pases < 2) pases++
+  } else {
+    if (pases > 0) {
+      pases--
+      paseUsado = true
+    } else {
+      rachaSemanas = 0
+    }
+  }
+
+  const updated = { ...user, rachaSemanas, rachaMejor, pases, ultimaSemanaEvaluada: semanaAnteriorKey }
+  await saveUser(updated)
+  return { ...updated, paseUsado }
+}
+
+export { getLunes, weekKey }
 
 export async function exportarDatos() {
   const db = await getDB()

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getAllWorkouts, getWorkoutExercises, getSets, getExercise } from '../db'
+import CalendarioAsistencia from '../components/CalendarioAsistencia'
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -163,6 +164,7 @@ function DetalleWorkout({ workout, onVolver }) {
 export default function Historial() {
   const [workouts, setWorkouts] = useState([])
   const [stats, setStats] = useState({ entrenos: 0, series: 0, volumen: 0 })
+  const [workoutDias, setWorkoutDias] = useState(new Set())
   const [detalle, setDetalle] = useState(null)
   const [cargando, setCargando] = useState(true)
 
@@ -197,6 +199,12 @@ export default function Historial() {
       enriquecidos.push({ ...w, ejercicios: nombres, volumen, series })
     }
 
+    const dias = new Set(
+      completados
+        .filter(w => w.fechaFin)
+        .map(w => w.fechaFin.slice(0, 10))
+    )
+    setWorkoutDias(dias)
     setWorkouts(enriquecidos)
     setStats({ entrenos: completados.length, series: totalSeries, volumen: totalVolumen })
     setCargando(false)
@@ -213,7 +221,8 @@ export default function Historial() {
       </div>
 
       {/* Stats globales */}
-      <div className="px-4 mt-2 grid grid-cols-3 gap-3">
+      <p className="px-4 pt-4 pb-2 text-[#8E8E93] text-xs uppercase tracking-widest">Totales</p>
+      <div className="px-4 grid grid-cols-3 gap-3">
         {[
           { label: 'Entrenos', value: formatNumero(stats.entrenos) },
           { label: 'Series',   value: formatNumero(stats.series) },
@@ -224,6 +233,12 @@ export default function Historial() {
             <p className="text-[#8E8E93] text-xs mt-1">{s.label}</p>
           </div>
         ))}
+      </div>
+
+      {/* Calendario de asistencia */}
+      <p className="px-4 pt-5 pb-2 text-[#8E8E93] text-xs uppercase tracking-widest">Asistencia</p>
+      <div className="mb-2">
+        <CalendarioAsistencia workoutDias={workoutDias} />
       </div>
 
       {/* Lista de entrenamientos */}

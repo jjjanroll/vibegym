@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getAllExercises, getPRForExercise, getWorkoutExercises, getAllWorkouts, getSets, getUser, saveExercise, deleteExercise } from '../db'
+import ExerciseDetailSheet from '../components/ExerciseDetailSheet'
 
 const CATEGORIAS_FILTRO = ['Todas', 'Pecho', 'Espalda', 'Hombros', 'Bíceps', 'Tríceps', 'Piernas', 'Core', 'Cardio']
 const CATEGORIAS = ['Pecho', 'Espalda', 'Hombros', 'Bíceps', 'Tríceps', 'Piernas', 'Core', 'Cardio']
@@ -37,6 +38,7 @@ function CategoriaBadge({ categoria }) {
 function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
   const [pr, setPr] = useState(null)
   const [historial, setHistorial] = useState(null) // [{ fecha, sets }]
+  const [sheetEj, setSheetEj] = useState(null)
   const conv = (kg) => unidad === 'lb' ? +(kg * 2.205).toFixed(1) : kg
 
   useEffect(() => {
@@ -73,10 +75,22 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
         </button>
         <div className="flex items-center gap-3">
           <CategoriaBadge categoria={ejercicio.categoria} />
-          <div>
+          <div className="flex-1 min-w-0">
             <h1 className="text-2xl font-bold text-white">{ejercicio.nombre}</h1>
             <p className="text-[#8E8E93] text-sm">{ejercicio.musculoPrincipal} · {ejercicio.categoria}</p>
           </div>
+          <button
+            onClick={() => setSheetEj(ejercicio)}
+            className="shrink-0 flex items-center gap-1.5 bg-[#1C1C1E] px-3 py-2 rounded-xl active:opacity-70"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="#30D158" strokeWidth="2"
+                 strokeLinecap="round" width="15" height="15">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="3"/>
+            </svg>
+            <span className="text-[#30D158] text-xs font-semibold">Instrucciones</span>
+          </button>
         </div>
       </div>
 
@@ -90,14 +104,6 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
             </p>
             <p className="text-[#8E8E93] text-sm">1RM estimado: {conv(Math.round(pr.rm1 * 10) / 10)} {unidad}</p>
           </div>
-        </div>
-      )}
-
-      {/* Instrucciones si existen */}
-      {ejercicio.descripcion && (
-        <div className="mx-4 mb-3 bg-[#1C1C1E] rounded-2xl p-4">
-          <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2">Instrucciones</p>
-          <p className="text-white text-sm leading-relaxed">{ejercicio.descripcion}</p>
         </div>
       )}
 
@@ -149,6 +155,8 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
           </div>
         )}
       </div>
+
+      <ExerciseDetailSheet ejercicio={sheetEj} onCerrar={() => setSheetEj(null)} />
     </div>
   )
 }
@@ -267,6 +275,7 @@ export default function Ejercicios() {
   const [categoria, setCategoria] = useState('Todas')
   const [busqueda, setBusqueda]   = useState('')
   const [seleccionado, setSeleccionado] = useState(null)
+  const [sheetEj, setSheetEj] = useState(null)
   const [unidad, setUnidad] = useState('kg')
   const [creando, setCreando] = useState(false)
 
@@ -362,21 +371,29 @@ export default function Ejercicios() {
             </div>
           ) : (
             filtrados.map(e => (
-              <button
-                key={e.id}
-                onClick={() => setSeleccionado(e)}
-                className="w-full px-4 py-3 flex items-center gap-3 active:bg-[#2C2C2E] text-left"
-              >
-                <CategoriaBadge categoria={e.categoria} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-white text-base font-medium leading-tight truncate">{e.nombre}</p>
-                  <p className="text-[#8E8E93] text-sm">{e.musculoPrincipal}</p>
-                </div>
-                <svg viewBox="0 0 24 24" fill="none" stroke="#38383A" strokeWidth="2.5"
-                     strokeLinecap="round" strokeLinejoin="round" width="16" height="16" className="shrink-0">
-                  <path d="M9 18l6-6-6-6"/>
-                </svg>
-              </button>
+              <div key={e.id} className="flex items-center">
+                <button
+                  onClick={() => setSeleccionado(e)}
+                  className="flex-1 min-w-0 px-4 py-3 flex items-center gap-3 active:bg-[#2C2C2E] text-left"
+                >
+                  <CategoriaBadge categoria={e.categoria} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-base font-medium leading-tight truncate">{e.nombre}</p>
+                    <p className="text-[#8E8E93] text-sm">{e.musculoPrincipal}</p>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setSheetEj(e)}
+                  className="shrink-0 w-10 h-full py-3 pr-4 flex items-center justify-center active:opacity-60"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#8E8E93" strokeWidth="2"
+                       strokeLinecap="round" width="18" height="18">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="3"/>
+                  </svg>
+                </button>
+              </div>
             ))
           )}
         </div>
@@ -386,6 +403,8 @@ export default function Ejercicios() {
           </p>
         )}
       </div>
+
+      <ExerciseDetailSheet ejercicio={sheetEj} onCerrar={() => setSheetEj(null)} />
 
     </div>
   )

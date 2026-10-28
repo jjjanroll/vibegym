@@ -1,6 +1,32 @@
 import { useState, useEffect } from 'react'
 import { getWorkoutExercises, getSets, getExercise, getPRForExercise } from '../db'
 
+const MENSAJES_POSTWORKOUT = [
+  '¡Entrenamiento completado! Otro día que marcas la diferencia.',
+  '¡Lo lograste! Cada rep cuenta.',
+  '¡Sesión terminada! Tu yo del futuro te lo agradece.',
+  'Trabajo hecho. Nadie te puede quitar lo que acabas de ganar.',
+  '¡Brutal! Sigue así y los resultados llegarán.',
+  '¡Bien hecho! La constancia construye cuerpos y carácter.',
+  'Un entrenamiento más en el banco. Sigue sumando.',
+  '¡Eso es! Hoy fuiste más fuerte que tus excusas.',
+  'Completado. El descanso de hoy se lo ganaste.',
+  '¡Crack! Otro ladrillo en la pared de tus metas.',
+  'Terminaste cuando otros ni empezaron. Eso vale.',
+  '¡Sesión lista! El músculo que no ves aún está creciendo.',
+  'Otro día, otra victoria. Así se construye el hábito.',
+  '¡Excelente trabajo! La disciplina que muestras hoy es el resultado de mañana.',
+  'Hecho. Ahora a recuperar y volver con más.',
+  '¡Tremendo! Cada entrenamiento te acerca más a tu mejor versión.',
+  'Completado con éxito. El esfuerzo nunca miente.',
+]
+
+function getMensajePostWorkout(fechaFin) {
+  const d = new Date(fechaFin || Date.now())
+  const idx = (d.getDate() * 7 + d.getHours()) % MENSAJES_POSTWORKOUT.length
+  return MENSAJES_POSTWORKOUT[idx]
+}
+
 function formatDuracion(inicio, fin) {
   const s = Math.floor((new Date(fin) - new Date(inicio)) / 1000)
   const h = Math.floor(s / 3600)
@@ -86,6 +112,13 @@ export default function ResumenWorkout({ workout, onGuardar }) {
 
       {/* Contenido scrollable */}
       <div className="flex-1 overflow-y-auto pb-8" style={{ WebkitOverflowScrolling: 'touch' }}>
+
+        {/* Mensaje motivacional */}
+        <div className="mx-4 mt-4 px-4 py-3 rounded-2xl" style={{ backgroundColor: '#30D15812' }}>
+          <p className="text-[#30D158] text-sm font-medium text-center leading-snug">
+            {getMensajePostWorkout(workout.fechaFin)}
+          </p>
+        </div>
 
         {/* Stats */}
         <div className="px-4 mt-4 grid grid-cols-3 gap-3">

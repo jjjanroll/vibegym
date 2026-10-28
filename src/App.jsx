@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { saveWorkout, getWorkout, getUser, getAllWorkouts, deleteWorkoutCompleto, getAllTemplates, saveTemplate, saveTemplateExercise, getTemplateExercises, getExercise, saveWorkoutExercise, saveSet } from './db'
+import { saveWorkout, getWorkout, getUser, saveUser, getAllWorkouts, deleteWorkoutCompleto, getAllTemplates, saveTemplate, saveTemplateExercise, getTemplateExercises, getExercise, saveWorkoutExercise, saveSet, evaluarRacha } from './db'
 import TabBar from './components/TabBar'
 import Entrenar from './screens/Entrenar'
 import Historial from './screens/Historial'
@@ -21,7 +21,8 @@ export default function App() {
   const [workoutId, setWorkoutId] = useState(null)
   const [workoutResumen, setWorkoutResumen] = useState(null)
   const [onboardingCompleto, setOnboardingCompleto] = useState(null)
-  const [workoutEnProgreso, setWorkoutEnProgreso] = useState(null) // workout sin fechaFin
+  const [workoutEnProgreso, setWorkoutEnProgreso] = useState(null)
+  const [userActual, setUserActual] = useState(null)
 
   useEffect(() => {
     async function inicializar() {
@@ -31,6 +32,8 @@ export default function App() {
         const todos = await getAllWorkouts()
         const enProgreso = todos.find(w => !w.fechaFin)
         if (enProgreso) setWorkoutEnProgreso(enProgreso)
+        const userEvaluado = await evaluarRacha()
+        setUserActual(userEvaluado ?? user)
       }
     }
     inicializar()
@@ -192,6 +195,8 @@ export default function App() {
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <Screen
           onIniciar={tab === 'entrenar' ? iniciarEntrenamiento : undefined}
+          user={tab === 'entrenar' ? userActual : undefined}
+          onUserUpdate={tab === 'entrenar' ? setUserActual : undefined}
         />
       </div>
       <TabBar active={tab} onChange={setTab} />

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { getUser, saveUser, getAllWorkouts, getAllBodyWeights, saveBodyWeight, exportarDatos, getAllPRs, getAllExercises } from '../db'
+import { useState, useEffect, useRef } from 'react'
+import { getUser, saveUser, getAllWorkouts, getAllBodyWeights, saveBodyWeight, exportarDatos, importarDatos, getAllPRs, getAllExercises } from '../db'
 
 // ── Sub-pantalla: Récords personales ─────────────────────────────────────
 
@@ -284,6 +284,10 @@ export default function Yo() {
   const [user, setUser] = useState(null)
   const [stats, setStats] = useState({ entrenos: 0 })
   const [vista, setVista] = useState('main') // 'main' | 'config' | 'peso' | 'records'
+  const [importPending, setImportPending] = useState(null) // { json, resumen }
+  const [importEstado, setImportEstado] = useState(null)   // 'ok' | 'error' | null
+  const [importError, setImportError] = useState('')
+  const fileInputRef = useRef(null)
 
   useEffect(() => {
     getUser().then(setUser)
@@ -312,6 +316,51 @@ export default function Yo() {
     a.download = `vibegym-backup-${fecha}.json`
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  function handleImportarClick() {
+    fileInputRef.current?.click()
+  }
+
+  function handleFileChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    e.target.value = ''
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const json = JSON.parse(ev.target.result)
+        if (!json || json.version !== 1) throw new Error('Versión de backup incompatible.')
+        const fecha = json.exportadoEn
+          ? new Date(json.exportadoEn).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })
+          : 'desconocida'
+        setImportPending({
+          json,
+          resumen: `${json.workouts?.length ?? 0} entrenamientos · exportado el ${fecha}`,
+        })
+      } catch {
+        setImportError('El archivo no es un backup válido de VibeGym.')
+        setImportEstado('error')
+      }
+    }
+    reader.readAsText(file)
+  }
+
+  async function confirmarImport() {
+    try {
+      await importarDatos(importPending.json)
+      setImportPending(null)
+      setImportEstado('ok')
+      // Recargar datos del usuario
+      const u = await getUser()
+      setUser(u)
+      const todos = await getAllWorkouts()
+      setStats({ entrenos: todos.filter(w => w.fechaFin).length })
+    } catch (err) {
+      setImportPending(null)
+      setImportError(err.message ?? 'Error al importar.')
+      setImportEstado('error')
+    }
   }
 
   function handlePesoGuardar(kg) {
@@ -376,6 +425,7 @@ export default function Yo() {
             { label: 'Récords personales', sub: 'Tus mejores marcas 🏆', accion: () => setVista('records') },
             { label: 'Configuración', sub: `Unidades: ${unidad} · Timer: ${(user?.timerSegundos ?? 90)}s`, accion: () => setVista('config') },
             { label: 'Exportar datos', sub: 'Descarga backup JSON', accion: handleExportar },
+            { label: 'Importar datos', sub: 'Restaurar desde backup JSON', accion: handleImportarClick },
           ].map(item => (
             <button
               key={item.label}
@@ -394,6 +444,69 @@ export default function Yo() {
           ))}
         </div>
       </div>
+
+      {/* Input de archivo oculto */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
+      {/* Modal: confirmación de importar */}
+      {importPending && (
+        <div className="fixed inset-0 z-50 flex items-end" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+          <div className="absolute inset-0 bg-black/70" onClick={() => setImportPending(null)} />
+          <div className="relative w-full bg-[#1C1C1E] rounded-t-3xl px-6 pt-6 pb-8">
+            <div className="w-10 h-1 bg-[#38383A] rounded-full mx-auto mb-5" />
+            <h2 className="text-xl font-bold text-white mb-1">Importar datos</h2>
+            <p className="text-[#8E8E93] text-sm mb-1">
+              Esto reemplazará <span className="text-white font-semibold">todos tus datos actuales</span>.
+            </p>
+            <p className="text-[#8E8E93] text-sm mb-6">{importPending.resumen}</p>
+            <button
+              onClick={confirmarImport}
+              className="w-full bg-[#FF3B30] text-white font-bold py-4 rounded-2xl mb-3 active:opacity-80"
+            >
+              Sí, importar y reemplazar
+            </button>
+            <button
+              onClick={() => setImportPending(null)}
+              className="w-full bg-[#2C2C2E] text-white font-semibold py-4 rounded-2xl active:opacity-80"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: resultado */}
+      {importEstado && (
+        <div className="fixed inset-0 z-50 flex items-end" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+          <div className="absolute inset-0 bg-black/70" onClick={() => setImportEstado(null)} />
+          <div className="relative w-full bg-[#1C1C1E] rounded-t-3xl px-6 pt-6 pb-8">
+            <div className="w-10 h-1 bg-[#38383A] rounded-full mx-auto mb-5" />
+            {importEstado === 'ok' ? (
+              <>
+                <h2 className="text-xl font-bold text-white mb-2">Importación exitosa</h2>
+                <p className="text-[#8E8E93] text-sm mb-6">Tus datos han sido restaurados correctamente.</p>
+              </>
+            ) : (
+              <>
+                <h2 className="text-xl font-bold text-white mb-2">Error al importar</h2>
+                <p className="text-[#8E8E93] text-sm mb-6">{importError}</p>
+              </>
+            )}
+            <button
+              onClick={() => setImportEstado(null)}
+              className="w-full bg-[#2C2C2E] text-white font-semibold py-4 rounded-2xl active:opacity-80"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
