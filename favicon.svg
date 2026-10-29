@@ -1,8 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-  <rect width="48" height="48" rx="11" ry="11" fill="#30D158"/>
-  <rect x="16" y="22" width="16" height="4" rx="2" fill="white"/>
-  <rect x="9" y="19" width="4" height="10" rx="2" fill="white"/>
-  <rect x="13" y="20.5" width="4" height="7" rx="1.5" fill="white"/>
-  <rect x="31" y="20.5" width="4" height="7" rx="1.5" fill="white"/>
-  <rect x="35" y="19" width="4" height="10" rx="2" fill="white"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3EDF65"/>
+      <stop offset="100%" stop-color="#22A344"/>
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="11" fill="#000"/>
+  <!-- End caps -->
+  <rect x="3"  y="21" width="2.5" height="6"   rx="1.25" fill="url(#g)"/>
+  <rect x="42.5" y="21" width="2.5" height="6" rx="1.25" fill="url(#g)"/>
+  <!-- Outer plates -->
+  <rect x="5.5"  y="18" width="6"  height="12" rx="1.8" fill="url(#g)"/>
+  <rect x="36.5" y="18" width="6"  height="12" rx="1.8" fill="url(#g)"/>
+  <!-- Inner plates -->
+  <rect x="11.5" y="19.5" width="5" height="9" rx="1.5" fill="url(#g)"/>
+  <rect x="31.5" y="19.5" width="5" height="9" rx="1.5" fill="url(#g)"/>
+  <!-- Bar -->
+  <rect x="16.5" y="22.5" width="15" height="3" rx="1.5" fill="url(#g)"/>
 </svg>
