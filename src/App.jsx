@@ -109,7 +109,6 @@ export default function App() {
   async function guardarResumen(plantillaNombre) {
     // Opcionalmente guardar como plantilla
     if (plantillaNombre && workoutResumen) {
-      const { getWorkoutExercises } = await import('./db')
       const wes = await getWorkoutExercises(workoutResumen.id)
       const tId = await saveTemplate({
         nombre: plantillaNombre,

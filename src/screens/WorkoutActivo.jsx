@@ -217,6 +217,9 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
     const item = items[iIdx]
     const ultima = item.sets[item.sets.length - 1]
     const esCardio = item.tipo === 'cardio'
+    const prevSets = anteriores[item.ejercicioId] ?? []
+    const prevAt = prevSets[item.sets.length]
+    const toDisp = (kg) => kg != null ? (unidad === 'lb' ? +(kg * 2.205).toFixed(1) : kg) : ''
     const setId = await saveSet({
       workoutExerciseId: item.weId,
       orden: item.sets.length + 1,
@@ -228,10 +231,10 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
       sets: [...it.sets, {
         id: setId,
         orden: it.sets.length + 1,
-        peso:      esCardio ? '' : (ultima?.peso ?? ''),
-        reps:      esCardio ? '' : (ultima?.reps ?? ''),
-        tiempo:    esCardio ? (ultima?.tiempo ?? '') : '',
-        distancia: esCardio ? (ultima?.distancia ?? '') : '',
+        peso:      esCardio ? '' : (ultima?.peso !== '' ? (ultima?.peso ?? '') : (prevAt?.peso != null ? String(toDisp(prevAt.peso)) : '')),
+        reps:      esCardio ? '' : (ultima?.reps !== '' ? (ultima?.reps ?? '') : (prevAt?.reps != null ? String(prevAt.reps) : '')),
+        tiempo:    esCardio ? (ultima?.tiempo !== '' ? (ultima?.tiempo ?? '') : (prevAt?.tiempo != null ? String(prevAt.tiempo) : '')) : '',
+        distancia: esCardio ? (ultima?.distancia !== '' ? (ultima?.distancia ?? '') : (prevAt?.distancia != null ? String(prevAt.distancia) : '')) : '',
         completada: false,
       }],
     }))
@@ -963,6 +966,7 @@ export default function WorkoutActivo({ workoutId, onTerminar, onCancelar }) {
     <NumericKeyboard
       campoActivo={campoActivo}
       items={items}
+      unidad={unidad}
       onDigit={handleDigit}
       onDecimal={handleDecimal}
       onBackspace={handleBackspace}

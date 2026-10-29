@@ -389,12 +389,6 @@ function PlantillaSheet({ plantilla, onCerrar, onIniciar, onEditar, onEliminar }
         </div>
       </div>
 
-      <style>{`
-        @keyframes sheetUp {
-          from { transform: translateY(100%); opacity: 0.6; }
-          to   { transform: translateY(0);    opacity: 1; }
-        }
-      `}</style>
     </>
   )
 }
@@ -669,12 +663,6 @@ function RachaSheet({ user, onUserUpdate, onCerrar, sesionesEstaSemana, toggleRa
         </div>
       </div>
 
-      <style>{`
-        @keyframes sheetUp {
-          from { transform: translateY(100%); opacity: 0.6; }
-          to   { transform: translateY(0);    opacity: 1; }
-        }
-      `}</style>
     </>
   )
 }

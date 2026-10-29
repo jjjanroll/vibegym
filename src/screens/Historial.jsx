@@ -267,7 +267,7 @@ export default function Historial() {
     const dias = new Set(
       completados
         .filter(w => w.fechaFin)
-        .map(w => w.fechaFin.slice(0, 10))
+        .map(w => new Date(w.fechaFin).toLocaleDateString('sv'))
     )
     setWorkoutDias(dias)
     setWorkouts(enriquecidos)

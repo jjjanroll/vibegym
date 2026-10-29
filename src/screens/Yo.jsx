@@ -419,32 +419,11 @@ function Configuracion({ user, onGuardar, onVolver }) {
 
 // ── Sub-pantalla: Registrar peso corporal ─────────────────────────────────
 
-function RegistrarPeso({ user, onGuardar, onVolver }) {
-  const unidad = user?.unidad ?? 'kg'
-  const [valor, setValor] = useState('')
-  const [registros, setRegistros] = useState([])
-
-  useEffect(() => {
-    getAllBodyWeights().then(setRegistros)
-  }, [])
-
-  async function guardar() {
-    const kg = unidad === 'lb' ? parseFloat(valor) / 2.205 : parseFloat(valor)
-    if (!kg || isNaN(kg)) return
-    await saveBodyWeight({ peso: Math.round(kg * 10) / 10, fecha: new Date().toISOString(), notas: null })
-    const actualizados = await getAllBodyWeights()
-    setRegistros(actualizados)
-    setValor('')
-    onGuardar(kg)
-  }
-
+function GraficaPeso({ datos, unidad }) {
   const convertir = (kg) => unidad === 'lb' ? +(kg * 2.205).toFixed(1) : kg
-
-  // Gráfica SVG simple
-  function GraficaPeso({ datos, unidad }) {
-    if (datos.length < 2) return null
-    const pts = [...datos].reverse() // cronológico
-    const pesos = pts.map(r => convertir(r.peso))
+  if (datos.length < 2) return null
+  const pts = [...datos].reverse() // cronológico
+  const pesos = pts.map(r => convertir(r.peso))
     const min = Math.min(...pesos)
     const max = Math.max(...pesos)
     const rango = max - min || 1
@@ -478,7 +457,28 @@ function RegistrarPeso({ user, onGuardar, onVolver }) {
         </div>
       </div>
     )
+}
+
+function RegistrarPeso({ user, onGuardar, onVolver }) {
+  const unidad = user?.unidad ?? 'kg'
+  const [valor, setValor] = useState('')
+  const [registros, setRegistros] = useState([])
+
+  useEffect(() => {
+    getAllBodyWeights().then(setRegistros)
+  }, [])
+
+  async function guardar() {
+    const kg = unidad === 'lb' ? parseFloat(valor) / 2.205 : parseFloat(valor)
+    if (!kg || isNaN(kg)) return
+    await saveBodyWeight({ peso: Math.round(kg * 10) / 10, fecha: new Date().toISOString(), notas: null })
+    const actualizados = await getAllBodyWeights()
+    setRegistros(actualizados)
+    setValor('')
+    onGuardar(kg)
   }
+
+  const convertir = (kg) => unidad === 'lb' ? +(kg * 2.205).toFixed(1) : kg
 
   return (
     <div className="pb-8 screen-push">
@@ -619,7 +619,11 @@ export default function Yo() {
       const u = await getUser()
       setUser(u)
       const todos = await getAllWorkouts()
-      setStats({ entrenos: todos.filter(w => w.fechaFin).length })
+      const completados = todos.filter(w => w.fechaFin)
+      const horas = Math.round(completados.reduce((acc, w) => {
+        return acc + (new Date(w.fechaFin) - new Date(w.fechaInicio)) / 3600000
+      }, 0))
+      setStats({ entrenos: completados.length, horas })
     } catch (err) {
       setImportPending(null)
       setImportError(err.message ?? 'Error al importar.')

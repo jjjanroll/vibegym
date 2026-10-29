@@ -1,9 +1,9 @@
-export default function NumericKeyboard({ campoActivo, items, onDigit, onDecimal, onBackspace, onIncrement, onNext, onDismiss }) {
+export default function NumericKeyboard({ campoActivo, items, onDigit, onDecimal, onBackspace, onIncrement, onNext, onDismiss, unidad = 'kg' }) {
   if (!campoActivo) return null
 
   const { campo } = campoActivo
   const esPeso = campo === 'peso' || campo === 'tiempo'
-  const step = campo === 'peso' ? 2.5 : campo === 'distancia' ? 0.5 : 1
+  const step = campo === 'peso' ? (unidad === 'lb' ? 5 : 2.5) : campo === 'distancia' ? 0.5 : 1
 
   return (
     <div
