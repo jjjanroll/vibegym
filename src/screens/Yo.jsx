@@ -332,6 +332,12 @@ function Records({ unidad, onVolver }) {
 function Configuracion({ user, onGuardar, onVolver }) {
   const [unidad, setUnidad] = useState(user?.unidad ?? 'kg')
   const [timer, setTimer] = useState(user?.timerSegundos ?? 90)
+  const [confirmarReset, setConfirmarReset] = useState(false)
+
+  function resetearCuenta() {
+    indexedDB.deleteDatabase('vibegym')
+    window.location.reload()
+  }
 
   async function guardar() {
     await saveUser({ ...(user || { id: 1 }), unidad, timerSegundos: timer })
@@ -412,6 +418,45 @@ function Configuracion({ user, onGuardar, onVolver }) {
         >
           Guardar
         </button>
+      </div>
+
+      {/* Zona peligrosa */}
+      <div className="px-4 mt-8 mb-2">
+        <p className="text-[#8E8E93] text-xs font-medium uppercase tracking-wider mb-2 px-1">Zona peligrosa</p>
+        <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden">
+          {!confirmarReset ? (
+            <button
+              onClick={() => setConfirmarReset(true)}
+              className="w-full px-5 py-4 flex items-center justify-between active:bg-[#2C2C2E]"
+            >
+              <span className="text-[#FF3B30] font-medium">Resetear cuenta</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2"
+                   strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/>
+              </svg>
+            </button>
+          ) : (
+            <div className="px-5 py-4">
+              <p className="text-white font-semibold mb-1">¿Borrar todo?</p>
+              <p className="text-[#8E8E93] text-sm mb-4">Se eliminarán todos tus entrenamientos, ejercicios, récords y configuración. Esta acción no se puede deshacer.</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setConfirmarReset(false)}
+                  className="flex-1 bg-[#2C2C2E] text-white font-semibold py-3 rounded-xl active:opacity-80"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={resetearCuenta}
+                  className="flex-1 bg-[#FF3B30] text-white font-bold py-3 rounded-xl active:opacity-80"
+                >
+                  Sí, borrar todo
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        <p className="text-[#8E8E93] text-xs px-1 mt-2">Útil para empezar desde cero o cambiar de usuario.</p>
       </div>
     </div>
   )
