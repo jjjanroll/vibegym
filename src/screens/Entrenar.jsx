@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { getAllWorkouts, getWorkoutExercises, getExercise, getAllTemplates, getTemplateExercises, saveTemplate, saveTemplateExercise, deleteTemplate, saveUser, getLunes } from '../db'
+import { useState, useEffect, useRef } from 'react'
+import { getAllWorkouts, getWorkoutExercises, getExercise, getAllTemplates, getTemplateExercises, saveTemplate, saveTemplateExercise, deleteTemplateExercise, deleteTemplate, saveUser, getLunes } from '../db'
 import SelectorEjercicios from './SelectorEjercicios'
 
 function formatDuracion(inicio, fin) {
@@ -7,6 +7,19 @@ function formatDuracion(inicio, fin) {
   const mins = Math.round((new Date(fin) - new Date(inicio)) / 60000)
   if (mins < 60) return `${mins}m`
   return `${Math.floor(mins / 60)}h ${mins % 60}m`
+}
+
+function mensajeAusencia(recientes) {
+  if (!recientes) return null
+  if (recientes.length === 0) return '¡Tu primer entreno te espera!'
+  const ultimo = new Date(recientes[0].fechaFin)
+  const hoy = new Date()
+  const dias = Math.floor((hoy - ultimo) / 86400000)
+  if (dias === 0) return '¡Ya entrenaste hoy! 🔥'
+  if (dias === 1) return 'Ayer entrenaste — ¿un día más?'
+  if (dias <= 5) return `Llevas ${dias} días sin entrenar`
+  if (dias <= 13) return 'El gym te está esperando 💪'
+  return 'Ha pasado un tiempo — ¡volvamos!'
 }
 
 function formatFecha(isoString) {
@@ -21,9 +34,8 @@ function formatFecha(isoString) {
 // ── Crear plantilla desde cero ────────────────────────────────────────────
 
 function CrearPlantilla({ onGuardar, onCancelar }) {
-  const [paso, setPaso] = useState('nombre') // 'nombre' | 'ejercicios'
   const [nombre, setNombre] = useState('')
-  const [ejercicios, setEjercicios] = useState([]) // [{ id, nombre, tipo }]
+  const [ejercicios, setEjercicios] = useState([])
   const [seleccionando, setSeleccionando] = useState(false)
 
   async function guardar() {
@@ -42,7 +54,7 @@ function CrearPlantilla({ onGuardar, onCancelar }) {
           setEjercicios(prev => prev.find(e => e.id === ej.id) ? prev : [...prev, ej])
           setSeleccionando(false)
         }}
-        onCancelar={() => setSeleccionando(false)}
+        onCerrar={() => setSeleccionando(false)}
       />
     )
   }
@@ -52,7 +64,7 @@ function CrearPlantilla({ onGuardar, onCancelar }) {
       <div className="shrink-0 px-4 pt-5 pb-3 flex items-center gap-3 border-b border-[#38383A]">
         <button onClick={onCancelar} className="text-[#30D158] font-medium text-sm flex items-center gap-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-               strokeLinecap="round" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+               strokeLinecap="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg>
           Cancelar
         </button>
         <h1 className="text-lg font-bold flex-1">Nueva rutina</h1>
@@ -66,7 +78,6 @@ function CrearPlantilla({ onGuardar, onCancelar }) {
       </div>
 
       <div className="flex-1 overflow-y-auto pb-8">
-        {/* Nombre */}
         <div className="px-4 mt-4">
           <input
             type="text"
@@ -78,7 +89,6 @@ function CrearPlantilla({ onGuardar, onCancelar }) {
           />
         </div>
 
-        {/* Ejercicios */}
         <div className="px-4 mt-5">
           <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2 px-1">Ejercicios</p>
           {ejercicios.length > 0 && (
@@ -106,6 +116,286 @@ function CrearPlantilla({ onGuardar, onCancelar }) {
         </div>
       </div>
     </div>
+  )
+}
+
+// ── Editar plantilla existente ────────────────────────────────────────────
+
+function EditarPlantilla({ plantilla, onGuardar, onCancelar }) {
+  const [nombre, setNombre] = useState(plantilla.nombre)
+  const [ejercicios, setEjercicios] = useState([])
+  const [seleccionando, setSeleccionando] = useState(false)
+  const [cargando, setCargando] = useState(true)
+
+  useEffect(() => {
+    async function cargar() {
+      const tes = await getTemplateExercises(plantilla.id)
+      const loaded = await Promise.all(tes.map(async te => {
+        const ej = await getExercise(te.exerciseId)
+        return { id: ej?.id ?? te.exerciseId, nombre: ej?.nombre ?? '?', tipo: ej?.tipo ?? 'fuerza', teId: te.id }
+      }))
+      setEjercicios(loaded)
+      setCargando(false)
+    }
+    cargar()
+  }, [plantilla.id])
+
+  async function guardar() {
+    if (!nombre.trim() || ejercicios.length === 0) return
+    await saveTemplate({ id: plantilla.id, nombre: nombre.trim(), creadoEn: plantilla.creadoEn })
+    await Promise.all(ejercicios.map(e => e.teId ? deleteTemplateExercise(e.teId) : Promise.resolve()))
+    for (let i = 0; i < ejercicios.length; i++) {
+      await saveTemplateExercise({ templateId: plantilla.id, exerciseId: ejercicios[i].id, orden: i + 1, seriesDefault: 3 })
+    }
+    onGuardar()
+  }
+
+  function mover(i, dir) {
+    const j = i + dir
+    if (j < 0 || j >= ejercicios.length) return
+    const arr = [...ejercicios]
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+    setEjercicios(arr)
+  }
+
+  if (seleccionando) {
+    return (
+      <SelectorEjercicios
+        onSeleccionar={ej => {
+          setEjercicios(prev => prev.find(e => e.id === ej.id) ? prev : [...prev, { id: ej.id, nombre: ej.nombre, tipo: ej.tipo, teId: null }])
+          setSeleccionando(false)
+        }}
+        onCerrar={() => setSeleccionando(false)}
+      />
+    )
+  }
+
+  return (
+    <div className="flex flex-col" style={{ height: '100%' }}>
+      <div className="shrink-0 px-4 pt-5 pb-3 flex items-center gap-3 border-b border-[#38383A]">
+        <button onClick={onCancelar} className="text-[#30D158] font-medium text-sm flex items-center gap-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+               strokeLinecap="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg>
+          Cancelar
+        </button>
+        <h1 className="text-lg font-bold flex-1">Editar rutina</h1>
+        <button
+          onClick={guardar}
+          disabled={!nombre.trim() || ejercicios.length === 0 || cargando}
+          className="text-[#30D158] font-semibold disabled:opacity-30"
+        >
+          Guardar
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pb-8">
+        <div className="px-4 mt-4">
+          <input
+            type="text"
+            value={nombre}
+            onChange={e => setNombre(e.target.value)}
+            placeholder="Nombre de la rutina"
+            className="w-full bg-[#1C1C1E] text-white text-xl font-semibold px-5 py-4 rounded-2xl outline-none placeholder-[#3A3A3C]"
+          />
+        </div>
+
+        <div className="px-4 mt-5">
+          <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2 px-1">Ejercicios</p>
+          {cargando ? (
+            <div className="bg-[#1C1C1E] rounded-2xl p-4 text-center text-[#8E8E93] text-sm">Cargando...</div>
+          ) : (
+            <>
+              {ejercicios.length > 0 && (
+                <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden divide-y divide-[#38383A] mb-3">
+                  {ejercicios.map((ej, i) => (
+                    <div key={`${ej.id}-${i}`} className="flex items-center px-4 py-3.5 gap-2">
+                      <span className="text-[#8E8E93] text-sm w-5 shrink-0">{i + 1}</span>
+                      <span className="text-white flex-1 text-sm">{ej.nombre}</span>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => mover(i, -1)}
+                          disabled={i === 0}
+                          className="w-7 h-7 bg-[#3A3A3C] rounded-lg flex items-center justify-center text-[#AEAEB2] text-xs active:opacity-70 disabled:opacity-20"
+                        >↑</button>
+                        <button
+                          onClick={() => mover(i, 1)}
+                          disabled={i === ejercicios.length - 1}
+                          className="w-7 h-7 bg-[#3A3A3C] rounded-lg flex items-center justify-center text-[#AEAEB2] text-xs active:opacity-70 disabled:opacity-20"
+                        >↓</button>
+                        <button
+                          onClick={() => setEjercicios(prev => prev.filter((_, j) => j !== i))}
+                          className="w-7 h-7 flex items-center justify-center text-[#FF3B30] text-sm active:opacity-70"
+                        >✕</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <button
+                onClick={() => setSeleccionando(true)}
+                className="w-full bg-[#1C1C1E] py-4 rounded-2xl text-[#30D158] font-semibold active:opacity-70"
+              >
+                + Agregar ejercicio
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Sheet de detalle de plantilla ─────────────────────────────────────────
+
+function PlantillaSheet({ plantilla, onCerrar, onIniciar, onEditar, onEliminar }) {
+  const [ejerciciosCargados, setEjerciciosCargados] = useState([])
+  const [historialCargado, setHistorialCargado] = useState([])
+  const [confirmandoEliminar, setConfirmandoEliminar] = useState(false)
+
+  useEffect(() => {
+    async function cargar() {
+      const tes = await getTemplateExercises(plantilla.id)
+      const nombres = await Promise.all(tes.map(te => getExercise(te.exerciseId).then(e => e?.nombre ?? '?')))
+      setEjerciciosCargados(nombres)
+
+      const todos = await getAllWorkouts()
+      const relacionados = todos
+        .filter(w => w.templateId === plantilla.id && w.fechaFin)
+        .sort((a, b) => new Date(b.fechaFin) - new Date(a.fechaFin))
+        .slice(0, 3)
+      setHistorialCargado(relacionados)
+    }
+    cargar()
+  }, [plantilla.id])
+
+  return (
+    <>
+      <div
+        className="fixed inset-0 z-40 bg-black/70"
+        style={{ backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)', cursor: 'pointer' }}
+        onClick={onCerrar}
+        onTouchEnd={e => { e.preventDefault(); onCerrar() }}
+      />
+      <div
+        className="fixed left-0 right-0 bottom-0 z-50 bg-[#1C1C1E] rounded-t-3xl flex flex-col"
+        style={{
+          maxHeight: '90dvh',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          animation: 'sheetUp 0.28s cubic-bezier(0.32,0.72,0,1)',
+        }}
+      >
+        {/* Handle + cerrar */}
+        <div className="shrink-0 flex items-center justify-between px-5 pt-3 pb-1">
+          <div className="w-8" />
+          <div className="w-12 h-1.5 bg-[#48484A] rounded-full" />
+          <button
+            onClick={onCerrar}
+            className="w-8 h-8 bg-[#3A3A3C] rounded-full flex items-center justify-center active:opacity-60"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="#EBEBF5" strokeWidth="2.5"
+                 strokeLinecap="round" width="13" height="13">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-3 pb-6">
+          {/* Nombre + chip */}
+          <div className="flex items-start gap-3 mb-4">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-2xl font-bold text-white leading-tight">{plantilla.nombre}</h2>
+            </div>
+            <span className="shrink-0 mt-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-[#30D158]/20 text-[#30D158]">
+              {plantilla.total} ejercicio{plantilla.total !== 1 ? 's' : ''}
+            </span>
+          </div>
+
+          {/* Lista de ejercicios */}
+          <div className="mb-5">
+            <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2">Ejercicios</p>
+            <div className="bg-[#2C2C2E] rounded-2xl overflow-hidden divide-y divide-[#38383A]">
+              {ejerciciosCargados.length === 0 ? (
+                <div className="px-4 py-3 text-[#8E8E93] text-sm">Cargando...</div>
+              ) : ejerciciosCargados.map((nombre, i) => (
+                <div key={i} className="flex items-center px-4 py-3 gap-3">
+                  <span className="text-[#8E8E93] text-sm w-5 shrink-0">{i + 1}</span>
+                  <span className="text-white text-sm flex-1">{nombre}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Historial */}
+          <div className="mb-6">
+            <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2">Últimas veces</p>
+            {historialCargado.length === 0 ? (
+              <div className="bg-[#2C2C2E] rounded-2xl px-4 py-3">
+                <p className="text-[#8E8E93] text-sm">Nunca realizada</p>
+              </div>
+            ) : (
+              <div className="bg-[#2C2C2E] rounded-2xl overflow-hidden divide-y divide-[#38383A]">
+                {historialCargado.map(w => (
+                  <div key={w.id} className="flex items-center justify-between px-4 py-3">
+                    <span className="text-white text-sm">{formatFecha(w.fechaFin)}</span>
+                    <span className="text-[#30D158] text-sm font-medium">{formatDuracion(w.fechaInicio, w.fechaFin)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Acciones principales */}
+          <button
+            onClick={() => { onIniciar(plantilla.id); onCerrar() }}
+            className="w-full bg-[#30D158] text-black font-bold text-base py-4 rounded-2xl mb-3 active:opacity-80"
+          >
+            Empezar entrenamiento
+          </button>
+          <button
+            onClick={onEditar}
+            className="w-full bg-[#2C2C2E] text-white font-semibold text-base py-4 rounded-2xl mb-5 active:opacity-80"
+          >
+            Editar rutina
+          </button>
+
+          {/* Eliminar */}
+          <div className="border-t border-[#38383A] pt-4">
+            {!confirmandoEliminar ? (
+              <button
+                onClick={() => setConfirmandoEliminar(true)}
+                className="w-full bg-[#2C2C2E] text-[#FF3B30] font-semibold text-base py-4 rounded-2xl active:opacity-80"
+              >
+                Eliminar rutina
+              </button>
+            ) : (
+              <div className="bg-[#2C2C2E] rounded-2xl p-4">
+                <p className="text-white font-semibold mb-1">¿Eliminar esta rutina?</p>
+                <p className="text-[#8E8E93] text-sm mb-4">Esta acción no se puede deshacer.</p>
+                <button
+                  onClick={onEliminar}
+                  className="w-full bg-[#FF3B30] text-white font-bold py-3 rounded-xl mb-2 active:opacity-80"
+                >
+                  Sí, eliminar
+                </button>
+                <button
+                  onClick={() => setConfirmandoEliminar(false)}
+                  className="w-full bg-[#3A3A3C] text-white font-semibold py-3 rounded-xl active:opacity-80"
+                >
+                  Cancelar
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes sheetUp {
+          from { transform: translateY(100%); opacity: 0.6; }
+          to   { transform: translateY(0);    opacity: 1; }
+        }
+      `}</style>
+    </>
   )
 }
 
@@ -241,11 +531,11 @@ function TarjetaRacha({ user, onUserUpdate }) {
           </p>
         </div>
         <div className="flex gap-1 shrink-0">
-          {Array.from({ length: 2 }).map((_, i) => (
+          {Array.from({ length: metaSemanal }).map((_, i) => (
             <div
               key={i}
-              className="w-2.5 h-2.5 rounded-full"
-              style={{ backgroundColor: i < pases ? '#FF9500' : '#3A3A3C' }}
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: i < sesionesEstaSemana ? '#30D158' : '#3A3A3C' }}
             />
           ))}
         </div>
@@ -268,8 +558,9 @@ function RachaSheet({ user, onUserUpdate, onCerrar, sesionesEstaSemana, toggleRa
     <>
       <div
         className="fixed inset-0 z-40 bg-black/70"
-        style={{ backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)' }}
+        style={{ backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)', cursor: 'pointer' }}
         onClick={onCerrar}
+        onTouchEnd={e => { e.preventDefault(); onCerrar() }}
       />
       <div
         className="fixed left-0 right-0 bottom-0 z-50 bg-[#1C1C1E] rounded-t-3xl"
@@ -394,7 +685,9 @@ export default function Entrenar({ onIniciar, user, onUserUpdate }) {
   const [recientes, setRecientes] = useState(null)
   const [plantillas, setPlantillas] = useState(null)
   const [creando, setCreando] = useState(false)
-  const [confirmarEliminar, setConfirmarEliminar] = useState(null)
+  const [plantillaSheet, setPlantillaSheet] = useState(null)
+  const [editandoPlantilla, setEditandoPlantilla] = useState(null)
+  const longPressTimerRef = useRef(null)
 
   useEffect(() => {
     cargarTodo()
@@ -403,7 +696,6 @@ export default function Entrenar({ onIniciar, user, onUserUpdate }) {
   async function cargarTodo() {
     const [todos, templates] = await Promise.all([getAllWorkouts(), getAllTemplates()])
 
-    // Recientes
     const completados = todos.filter(w => w.fechaFin)
       .sort((a, b) => new Date(b.fechaFin) - new Date(a.fechaFin))
       .slice(0, 3)
@@ -415,7 +707,6 @@ export default function Entrenar({ onIniciar, user, onUserUpdate }) {
     }))
     setRecientes(enriquecidos)
 
-    // Plantillas
     const enriquecidas = await Promise.all(templates.map(async t => {
       const tes = await getTemplateExercises(t.id)
       const nombres = await Promise.all(tes.slice(0, 3).map(te => getExercise(te.exerciseId).then(e => e?.nombre ?? '')))
@@ -426,8 +717,19 @@ export default function Entrenar({ onIniciar, user, onUserUpdate }) {
 
   async function handleEliminarPlantilla(id) {
     await deleteTemplate(id)
-    setConfirmarEliminar(null)
     cargarTodo()
+  }
+
+  function iniciarLongPress(plantilla) {
+    clearTimeout(longPressTimerRef.current)
+    longPressTimerRef.current = setTimeout(() => {
+      navigator.vibrate?.(40)
+      setPlantillaSheet(plantilla)
+    }, 500)
+  }
+
+  function cancelarLongPress() {
+    clearTimeout(longPressTimerRef.current)
   }
 
   if (creando) {
@@ -439,18 +741,28 @@ export default function Entrenar({ onIniciar, user, onUserUpdate }) {
     )
   }
 
+  if (editandoPlantilla) {
+    return (
+      <EditarPlantilla
+        plantilla={editandoPlantilla}
+        onGuardar={() => { setEditandoPlantilla(null); cargarTodo() }}
+        onCancelar={() => setEditandoPlantilla(null)}
+      />
+    )
+  }
+
   return (
     <div className="pb-8">
 
       <div className="px-4 pt-5 pb-2">
-        <h1 className="text-[34px] font-bold tracking-tight">Entrenar</h1>
-      </div>
-
-      {/* Frase del día */}
-      <div className="px-6 pt-1 pb-2">
-        <p className="text-[#636366] text-[13px] italic text-center leading-snug">
-          &ldquo;{getFraseDelDia()}&rdquo;
-        </p>
+        <h1 className="text-[34px] font-bold tracking-tight">
+          Hola, {(user?.nombre || 'campeón').split(' ')[0]} 👋
+        </h1>
+        {recientes !== null && mensajeAusencia(recientes) && (
+          <p className="text-[#636366] text-[15px] mt-0.5">
+            {mensajeAusencia(recientes)}
+          </p>
+        )}
       </div>
 
       {/* Racha */}
@@ -466,6 +778,9 @@ export default function Entrenar({ onIniciar, user, onUserUpdate }) {
         >
           Empezar entrenamiento
         </button>
+        <p className="text-[#636366] text-[13px] italic text-center leading-snug mt-3 px-2">
+          &ldquo;{getFraseDelDia()}&rdquo;
+        </p>
       </div>
 
       {/* Mis rutinas */}
@@ -498,8 +813,10 @@ export default function Entrenar({ onIniciar, user, onUserUpdate }) {
             {plantillas.map(p => (
               <button
                 key={p.id}
-                onClick={() => onIniciar(p.id)}
-                onContextMenu={e => { e.preventDefault(); setConfirmarEliminar(p.id) }}
+                onClick={() => setPlantillaSheet(p)}
+                onTouchStart={() => iniciarLongPress(p)}
+                onTouchEnd={cancelarLongPress}
+                onTouchMove={cancelarLongPress}
                 className="bg-[#1C1C1E] rounded-2xl p-4 flex-shrink-0 w-44 text-left active:opacity-80"
               >
                 <p className="text-white font-bold text-base leading-tight mb-2 line-clamp-2">{p.nombre}</p>
@@ -546,27 +863,18 @@ export default function Entrenar({ onIniciar, user, onUserUpdate }) {
         )}
       </div>
 
-      {/* Modal eliminar plantilla */}
-      {confirmarEliminar && (
-        <div className="fixed inset-0 z-50 flex items-end" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-          <div className="absolute inset-0 bg-black/60" onClick={() => setConfirmarEliminar(null)} />
-          <div className="relative w-full bg-[#1C1C1E] rounded-t-3xl px-6 pt-5 pb-6">
-            <p className="text-white font-bold text-lg mb-1">¿Eliminar rutina?</p>
-            <p className="text-[#8E8E93] text-sm mb-5">Esta acción no se puede deshacer.</p>
-            <button
-              onClick={() => handleEliminarPlantilla(confirmarEliminar)}
-              className="w-full bg-[#FF3B30] text-white font-bold py-4 rounded-2xl mb-3 active:opacity-80"
-            >
-              Eliminar
-            </button>
-            <button
-              onClick={() => setConfirmarEliminar(null)}
-              className="w-full bg-[#2C2C2E] text-white font-semibold py-4 rounded-2xl active:opacity-80"
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
+      {/* PlantillaSheet */}
+      {plantillaSheet && (
+        <PlantillaSheet
+          plantilla={plantillaSheet}
+          onCerrar={() => setPlantillaSheet(null)}
+          onIniciar={onIniciar}
+          onEditar={() => { setPlantillaSheet(null); setEditandoPlantilla(plantillaSheet) }}
+          onEliminar={async () => {
+            await handleEliminarPlantilla(plantillaSheet.id)
+            setPlantillaSheet(null)
+          }}
+        />
       )}
 
     </div>

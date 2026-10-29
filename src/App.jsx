@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { saveWorkout, getWorkout, getUser, saveUser, getAllWorkouts, deleteWorkoutCompleto, getAllTemplates, saveTemplate, saveTemplateExercise, getTemplateExercises, getExercise, saveWorkoutExercise, saveSet, evaluarRacha } from './db'
+import { saveWorkout, getWorkout, getUser, saveUser, getAllWorkouts, deleteWorkoutCompleto, getAllTemplates, saveTemplate, saveTemplateExercise, getTemplateExercises, getExercise, saveWorkoutExercise, saveSet, evaluarRacha, getLastSetsForExercise } from './db'
 import TabBar from './components/TabBar'
 import Entrenar from './screens/Entrenar'
 import Historial from './screens/Historial'
@@ -71,13 +71,29 @@ export default function App() {
           orden: te.orden,
           notas: '',
         })
-        // Serie inicial vacía
-        await saveSet({
-          workoutExerciseId: weId,
-          orden: 1,
-          peso: null, reps: null, tiempo: null, distancia: null,
-          completada: false, notas: null,
-        })
+        const prevSets = await getLastSetsForExercise(te.exerciseId, id)
+        if (prevSets.length > 0) {
+          for (let i = 0; i < prevSets.length; i++) {
+            const prev = prevSets[i]
+            await saveSet({
+              workoutExerciseId: weId,
+              orden: i + 1,
+              peso: prev.peso ?? null,
+              reps: prev.reps ?? null,
+              tiempo: prev.tiempo ?? null,
+              distancia: prev.distancia ?? null,
+              completada: false,
+              notas: null,
+            })
+          }
+        } else {
+          await saveSet({
+            workoutExerciseId: weId,
+            orden: 1,
+            peso: null, reps: null, tiempo: null, distancia: null,
+            completada: false, notas: null,
+          })
+        }
       }
     }
 

@@ -18,6 +18,8 @@ export default function Onboarding({ onCompletar }) {
     altura: '',
     peso: '',
     objetivo: '',
+    diasSemana: 3,
+    nivel: '',
   })
 
   function actualizar(campo, valor) {
@@ -25,7 +27,7 @@ export default function Onboarding({ onCompletar }) {
   }
 
   function siguiente() {
-    if (paso < 4) setPaso(p => p + 1)
+    if (paso < 6) setPaso(p => p + 1)
   }
 
   function anterior() {
@@ -41,8 +43,13 @@ export default function Onboarding({ onCompletar }) {
       altura: parseFloat(datos.altura) || null,
       peso: parseFloat(datos.peso) || null,
       objetivo: datos.objetivo || null,
+      diasSemana: datos.diasSemana,
+      nivel: datos.nivel || 'principiante',
       unidad: 'kg',
       timerSegundos: 90,
+      metaSemanal: datos.diasSemana,
+      rachaMejor: 0,
+      rachaActual: 0,
     })
     onCompletar()
   }
@@ -200,6 +207,75 @@ export default function Onboarding({ onCompletar }) {
 
       <div className="flex-1" />
       <button
+        onClick={siguiente}
+        className="w-full bg-[#30D158] text-black font-bold text-lg py-4 rounded-2xl active:opacity-80 mb-4"
+      >
+        Continuar
+      </button>
+    </div>,
+
+    // 5 — Días por semana
+    <div key="dias" className="flex flex-col flex-1 px-6 pt-8">
+      <h2 className="text-3xl font-bold text-white mb-2">¿Cuántos días?</h2>
+      <p className="text-[#8E8E93] mb-8">¿Cuántos días a la semana quieres entrenar?</p>
+
+      <div className="grid grid-cols-3 gap-3">
+        {[2, 3, 4, 5, 6].map(n => (
+          <button
+            key={n}
+            onClick={() => actualizar('diasSemana', n)}
+            className={`py-5 rounded-2xl border-2 flex flex-col items-center justify-center transition-all active:scale-95 ${
+              datos.diasSemana === n
+                ? 'bg-[#30D158]/20 border-[#30D158]'
+                : 'bg-[#1C1C1E] border-[#38383A]'
+            }`}
+          >
+            <span className={`text-3xl font-bold ${datos.diasSemana === n ? 'text-[#30D158]' : 'text-white'}`}>{n}</span>
+            <span className="text-[#8E8E93] text-xs mt-1">días</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="flex-1" />
+      <button
+        onClick={siguiente}
+        className="w-full bg-[#30D158] text-black font-bold text-lg py-4 rounded-2xl active:opacity-80 mb-4"
+      >
+        Continuar
+      </button>
+    </div>,
+
+    // 6 — Nivel de experiencia
+    <div key="nivel" className="flex flex-col flex-1 px-6 pt-8">
+      <h2 className="text-3xl font-bold text-white mb-2">Tu nivel</h2>
+      <p className="text-[#8E8E93] mb-8">¿Cuánta experiencia tienes entrenando?</p>
+
+      <div className="flex flex-col gap-3">
+        {[
+          { id: 'principiante', label: 'Principiante', desc: 'Menos de 1 año entrenando', emoji: '🌱' },
+          { id: 'intermedio',   label: 'Intermedio',   desc: '1 a 3 años entrenando',    emoji: '💪' },
+          { id: 'avanzado',     label: 'Avanzado',     desc: 'Más de 3 años entrenando', emoji: '🏆' },
+        ].map(niv => (
+          <button
+            key={niv.id}
+            onClick={() => actualizar('nivel', niv.id)}
+            className={`flex items-center gap-4 px-5 py-4 rounded-2xl border-2 transition-all active:scale-95 ${
+              datos.nivel === niv.id
+                ? 'bg-[#30D158]/20 border-[#30D158]'
+                : 'bg-[#1C1C1E] border-[#38383A]'
+            }`}
+          >
+            <span className="text-3xl">{niv.emoji}</span>
+            <div className="text-left">
+              <p className={`font-semibold text-base ${datos.nivel === niv.id ? 'text-[#30D158]' : 'text-white'}`}>{niv.label}</p>
+              <p className="text-[#8E8E93] text-sm">{niv.desc}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <div className="flex-1" />
+      <button
         onClick={finalizar}
         className="w-full bg-[#30D158] text-black font-bold text-lg py-4 rounded-2xl active:opacity-80 mb-4"
       >
@@ -222,7 +298,7 @@ export default function Onboarding({ onCompletar }) {
         )}
         {/* Barra de progreso */}
         <div className="flex gap-1.5">
-          {[0,1,2,3,4].map(i => (
+          {[0,1,2,3,4,5,6].map(i => (
             <div
               key={i}
               className={`h-1 flex-1 rounded-full transition-all ${

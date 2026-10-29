@@ -123,6 +123,9 @@ export async function getExercise(id) {
 }
 
 export async function saveExercise(exercise) {
+  if (exercise.id == null) {
+    exercise = { ...exercise, id: Date.now() }
+  }
   const db = await getDB()
   return db.put('exercises', exercise)
 }
@@ -151,9 +154,11 @@ export async function saveTemplate(template) {
 
 export async function deleteTemplate(id) {
   const db = await getDB()
-  const tes = await db.getAllFromIndex('templateExercises', 'templateId', id)
-  await Promise.all(tes.map(te => db.delete('templateExercises', te.id)))
-  await db.delete('templates', id)
+  const tx = db.transaction(['templates', 'templateExercises'], 'readwrite')
+  const tes = await tx.objectStore('templateExercises').index('templateId').getAll(id)
+  await Promise.all(tes.map(te => tx.objectStore('templateExercises').delete(te.id)))
+  await tx.objectStore('templates').delete(id)
+  await tx.done
 }
 
 export async function getTemplateExercises(templateId) {
@@ -165,6 +170,11 @@ export async function getTemplateExercises(templateId) {
 export async function saveTemplateExercise(item) {
   const db = await getDB()
   return db.put('templateExercises', item)
+}
+
+export async function deleteTemplateExercise(id) {
+  const db = await getDB()
+  return db.delete('templateExercises', id)
 }
 
 // ── WORKOUTS ──────────────────────────────────────────────────────────────
@@ -215,9 +225,11 @@ export async function saveWorkoutExercise(item) {
 
 export async function deleteWorkoutExercise(weId) {
   const db = await getDB()
-  const sets = await db.getAllFromIndex('sets', 'workoutExerciseId', weId)
-  await Promise.all(sets.map(s => db.delete('sets', s.id)))
-  await db.delete('workoutExercises', weId)
+  const tx = db.transaction(['workoutExercises', 'sets'], 'readwrite')
+  const sets = await tx.objectStore('sets').index('workoutExerciseId').getAll(weId)
+  await Promise.all(sets.map(s => tx.objectStore('sets').delete(s.id)))
+  await tx.objectStore('workoutExercises').delete(weId)
+  await tx.done
 }
 
 // ── SETS ──────────────────────────────────────────────────────────────────
@@ -369,11 +381,31 @@ function getLunes(date) {
 }
 
 function weekKey(date) {
-  const lunes = getLunes(date)
-  const year = lunes.getFullYear()
-  const startOfYear = new Date(year, 0, 1)
-  const week = Math.ceil(((lunes - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7)
-  return `${year}-W${String(week).padStart(2, '0')}`
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  const day = (d.getDay() + 6) % 7
+  d.setDate(d.getDate() - day + 3) // jueves de la semana ISO
+  const year = d.getFullYear()
+  const jan4 = new Date(year, 0, 4)
+  const weekNum = 1 + Math.round((d - jan4) / (7 * 24 * 60 * 60 * 1000))
+  return `${year}-W${String(weekNum).padStart(2, '0')}`
+}
+
+function getLunesFromKey(key) {
+  const [year, wNum] = key.split('-W').map(Number)
+  const jan4 = new Date(year, 0, 4)
+  const mon1 = new Date(jan4)
+  mon1.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7))
+  mon1.setHours(0, 0, 0, 0)
+  const result = new Date(mon1)
+  result.setDate(mon1.getDate() + (wNum - 1) * 7)
+  return result
+}
+
+function semanasSiguiente(key) {
+  const lunes = getLunesFromKey(key)
+  lunes.setDate(lunes.getDate() + 7)
+  return weekKey(lunes)
 }
 
 export async function evaluarRacha() {
@@ -384,9 +416,6 @@ export async function evaluarRacha() {
   const lunesActual = getLunes(ahora)
   const lunesPasado = new Date(lunesActual)
   lunesPasado.setDate(lunesPasado.getDate() - 7)
-  const domingoAnterior = new Date(lunesActual)
-  domingoAnterior.setMilliseconds(-1)
-
   const semanaAnteriorKey = weekKey(lunesPasado)
 
   if (user.ultimaSemanaEvaluada === semanaAnteriorKey) return user
@@ -399,26 +428,38 @@ export async function evaluarRacha() {
 
   const db = await getDB()
   const todos = await db.getAllFromIndex('workouts', 'fechaInicio')
-  const enSemana = todos.filter(w => {
-    if (!w.fechaFin) return false
-    const f = new Date(w.fechaFin)
-    return f >= lunesPasado && f <= domingoAnterior
-  })
+  const completados = todos.filter(wo => wo.fechaFin)
 
   let { rachaSemanas = 0, rachaMejor = 0, pases = 0, metaSemanal = 3 } = user
   let paseUsado = false
 
-  if (enSemana.length >= metaSemanal) {
-    rachaSemanas++
-    if (rachaSemanas > rachaMejor) rachaMejor = rachaSemanas
-    if (rachaSemanas % 4 === 0 && pases < 2) pases++
-  } else {
-    if (pases > 0) {
-      pases--
-      paseUsado = true
+  // Iterar desde la semana siguiente a ultimaSemanaEvaluada hasta semanaAnteriorKey
+  let semActual = semanasSiguiente(user.ultimaSemanaEvaluada)
+  while (semActual <= semanaAnteriorKey) {
+    const lunes = getLunesFromKey(semActual)
+    const domingo = new Date(lunes)
+    domingo.setDate(domingo.getDate() + 7)
+    domingo.setMilliseconds(-1)
+
+    const enSemana = completados.filter(wo => {
+      const f = new Date(wo.fechaFin)
+      return f >= lunes && f <= domingo
+    })
+
+    if (enSemana.length >= metaSemanal) {
+      rachaSemanas++
+      if (rachaSemanas > rachaMejor) rachaMejor = rachaSemanas
+      if (rachaSemanas % 4 === 0 && pases < 2) pases++
     } else {
-      rachaSemanas = 0
+      if (pases > 0) {
+        pases--
+        paseUsado = true
+      } else {
+        rachaSemanas = 0
+      }
     }
+
+    semActual = semanasSiguiente(semActual)
   }
 
   const updated = { ...user, rachaSemanas, rachaMejor, pases, ultimaSemanaEvaluada: semanaAnteriorKey }

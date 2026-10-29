@@ -53,8 +53,9 @@ export default function ExerciseDetailSheet({ ejercicio, onCerrar, onAgregar }) 
       {/* Overlay */}
       <div
         className="fixed inset-0 z-40 bg-black/70"
-        style={{ backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)' }}
+        style={{ backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)', cursor: 'pointer' }}
         onClick={onCerrar}
+        onTouchEnd={e => { e.preventDefault(); onCerrar() }}
       />
 
       {/* Sheet */}

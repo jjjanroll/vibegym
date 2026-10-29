@@ -33,12 +33,80 @@ function CategoriaBadge({ categoria }) {
   )
 }
 
+// ── Gráfica de progresión 1RM ─────────────────────────────────────────────
+
+function GraficaProgresion({ historial, unidad = 'kg' }) {
+  if (!historial || historial.length < 2) return null
+
+  const conv = (kg) => unidad === 'lb' ? +(kg * 2.205).toFixed(1) : kg
+
+  const puntos = [...historial]
+    .reverse()
+    .map(entry => {
+      const mejor = entry.sets
+        .filter(s => s.peso && s.reps)
+        .reduce((max, s) => {
+          const rm = s.peso * (1 + s.reps / 30)
+          return rm > max ? rm : max
+        }, 0)
+      return { fecha: entry.fecha, rm: mejor }
+    })
+    .filter(p => p.rm > 0)
+
+  if (puntos.length < 2) return null
+
+  const rms = puntos.map(p => conv(p.rm))
+  const min = Math.min(...rms)
+  const max = Math.max(...rms)
+  const rango = max - min || 1
+  const W = 300, H = 80, PAD = 8
+  const xStep = (W - PAD * 2) / (puntos.length - 1)
+  const toX = (i) => PAD + i * xStep
+  const toY = (v) => PAD + (1 - (v - min) / rango) * (H - PAD * 2)
+
+  const d = puntos.map((p, i) => `${i === 0 ? 'M' : 'L'}${toX(i).toFixed(1)},${toY(rms[i]).toFixed(1)}`).join(' ')
+  const area = `${d} L${toX(puntos.length - 1).toFixed(1)},${H} L${PAD},${H} Z`
+
+  return (
+    <div className="mx-4 mb-3">
+      <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2 px-1">Progresión 1RM</p>
+      <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-20" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="rmGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#30D158" stopOpacity="0.3"/>
+              <stop offset="100%" stopColor="#30D158" stopOpacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d={area} fill="url(#rmGrad)"/>
+          <path d={d} fill="none" stroke="#30D158" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          {puntos.map((p, i) => (
+            <circle key={i} cx={toX(i)} cy={toY(rms[i])} r="3" fill="#30D158"/>
+          ))}
+        </svg>
+        <div className="flex justify-between px-4 pb-3 text-xs text-[#8E8E93]">
+          <span>{new Date(puntos[0].fecha).toLocaleDateString('es', { day: 'numeric', month: 'short' })}</span>
+          <span className="text-[#30D158] font-semibold">~{rms[rms.length - 1].toFixed(1)} {unidad}</span>
+          <span>{new Date(puntos[puntos.length - 1].fecha).toLocaleDateString('es', { day: 'numeric', month: 'short' })}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function calcularMejorRm(sets) {
+  const validos = sets.filter(s => s.peso && s.reps)
+  if (validos.length === 0) return 0
+  return Math.max(...validos.map(s => s.peso * (1 + s.reps / 30)))
+}
+
 // ── Detalle de ejercicio ──────────────────────────────────────────────────
 
-function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
+function DetalleEjercicio({ ejercicio, onVolver, onEliminar, unidad = 'kg' }) {
   const [pr, setPr] = useState(null)
   const [historial, setHistorial] = useState(null) // [{ fecha, sets }]
   const [sheetEj, setSheetEj] = useState(null)
+  const [confirmandoEliminar, setConfirmandoEliminar] = useState(false)
   const conv = (kg) => unidad === 'lb' ? +(kg * 2.205).toFixed(1) : kg
 
   useEffect(() => {
@@ -47,7 +115,7 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
     async function cargarHistorial() {
       const workouts = (await getAllWorkouts()).filter(w => w.fechaFin).sort((a, b) => new Date(b.fechaFin) - new Date(a.fechaFin))
       const entries = []
-      for (const w of workouts.slice(0, 5)) {
+      for (const w of workouts) {
         const wes = await getWorkoutExercises(w.id)
         const we = wes.find(we => we.exerciseId === ejercicio.id)
         if (!we) continue
@@ -55,6 +123,7 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
         const completadas = sets.filter(s => s.completada && (s.peso || s.reps || s.tiempo))
         if (completadas.length > 0) {
           entries.push({ fecha: w.fechaFin, nombre: w.nombre, sets: completadas })
+          if (entries.length >= 5) break
         }
       }
       setHistorial(entries)
@@ -65,12 +134,12 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
   const esCardio = ejercicio.tipo === 'cardio'
 
   return (
-    <div className="pb-8">
+    <div className="screen-push pb-8">
       {/* Header */}
       <div className="px-4 pt-5 pb-3">
         <button onClick={onVolver} className="text-[#30D158] font-medium text-sm flex items-center gap-1 mb-3">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-               strokeLinecap="round" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+               strokeLinecap="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg>
           Ejercicios
         </button>
         <div className="flex items-center gap-3">
@@ -115,12 +184,28 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
         </div>
       )}
 
+      <GraficaProgresion historial={historial} unidad={unidad} />
+
       {/* Historial */}
       <div className="px-4 mt-2">
         <p className="text-[#8E8E93] text-xs uppercase tracking-wider mb-2 px-1">Historial reciente</p>
         {historial === null ? (
-          <div className="bg-[#1C1C1E] rounded-2xl p-4 text-center text-[#8E8E93] text-sm">
-            Cargando...
+          <div className="flex flex-col gap-3">
+            {[1,2,3].map(i => (
+              <div key={i} style={{ position: 'relative', overflow: 'hidden' }}
+                   className="bg-[#1C1C1E] rounded-2xl">
+                <div className="p-4 flex flex-col gap-2">
+                  <div className="h-3 bg-[#2C2C2E] rounded-lg" style={{ width: `${40 + (i * 13) % 30}%` }} />
+                  <div className="h-4 bg-[#2C2C2E] rounded-lg" style={{ width: `${55 + (i * 11) % 25}%` }} />
+                  <div className="h-4 bg-[#2C2C2E] rounded-lg" style={{ width: `${45 + (i * 17) % 20}%` }} />
+                </div>
+                <div className="absolute inset-0" style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 1.4s ease-in-out infinite',
+                }} />
+              </div>
+            ))}
           </div>
         ) : historial.length === 0 ? (
           <div className="bg-[#1C1C1E] rounded-2xl p-4 text-center text-[#8E8E93] text-sm">
@@ -128,11 +213,22 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {historial.map((entry, i) => (
+            {historial.map((entry, i) => {
+              const rmActual = calcularMejorRm(entry.sets)
+              const rmAnterior = i < historial.length - 1 ? calcularMejorRm(historial[i + 1].sets) : null
+              const tendencia = (!esCardio && rmAnterior !== null && rmAnterior > 0)
+                ? (rmActual > rmAnterior * 1.01 ? 'up' : rmActual < rmAnterior * 0.99 ? 'down' : 'same')
+                : null
+              return (
               <div key={i} className="bg-[#1C1C1E] rounded-2xl p-4">
-                <p className="text-[#8E8E93] text-xs mb-2">
-                  {new Date(entry.fecha).toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </p>
+                <div className="flex items-center gap-2 mb-2">
+                  <p className="text-[#8E8E93] text-xs flex-1">
+                    {new Date(entry.fecha).toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                  {tendencia === 'up'   && <span className="text-[#30D158] text-xs font-bold">▲</span>}
+                  {tendencia === 'down' && <span className="text-[#FF3B30] text-xs font-bold">▼</span>}
+                  {tendencia === 'same' && <span className="text-[#636366] text-xs">—</span>}
+                </div>
                 <div className="flex flex-col gap-1">
                   {entry.sets.map((s, j) => (
                     <div key={j} className="flex gap-4 text-sm">
@@ -151,12 +247,44 @@ function DetalleEjercicio({ ejercicio, onVolver, unidad = 'kg' }) {
                   ))}
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
 
       <ExerciseDetailSheet ejercicio={sheetEj} onCerrar={() => setSheetEj(null)} />
+
+      {/* Eliminar ejercicio personalizado */}
+      {ejercicio.esPersonalizado && onEliminar && (
+        <div className="px-4 mt-6 pb-2">
+          {!confirmandoEliminar ? (
+            <button
+              onClick={() => setConfirmandoEliminar(true)}
+              className="w-full bg-[#2C2C2E] text-[#FF3B30] font-semibold py-4 rounded-2xl active:opacity-80"
+            >
+              Eliminar ejercicio
+            </button>
+          ) : (
+            <div className="bg-[#2C2C2E] rounded-2xl p-4">
+              <p className="text-white font-semibold mb-1">¿Eliminar este ejercicio?</p>
+              <p className="text-[#8E8E93] text-sm mb-4">Esta acción no se puede deshacer.</p>
+              <button
+                onClick={onEliminar}
+                className="w-full bg-[#FF3B30] text-white font-bold py-3 rounded-xl mb-2 active:opacity-80"
+              >
+                Sí, eliminar
+              </button>
+              <button
+                onClick={() => setConfirmandoEliminar(false)}
+                className="w-full bg-[#3A3A3C] text-white font-semibold py-3 rounded-xl active:opacity-80"
+              >
+                Cancelar
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -184,11 +312,11 @@ function CrearEjercicio({ onGuardar, onCancelar }) {
   }
 
   return (
-    <div className="pb-8">
+    <div className="screen-push pb-8">
       <div className="px-4 pt-5 pb-3 flex items-center justify-between border-b border-[#38383A]">
         <button onClick={onCancelar} className="text-[#30D158] font-medium text-sm flex items-center gap-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-               strokeLinecap="round" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+               strokeLinecap="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg>
           Cancelar
         </button>
         <h1 className="text-lg font-bold">Nuevo ejercicio</h1>
@@ -306,6 +434,11 @@ export default function Ejercicios() {
         ejercicio={seleccionado}
         unidad={unidad}
         onVolver={() => setSeleccionado(null)}
+        onEliminar={async () => {
+          await deleteExercise(seleccionado.id)
+          setSeleccionado(null)
+          cargarEjercicios()
+        }}
       />
     )
   }

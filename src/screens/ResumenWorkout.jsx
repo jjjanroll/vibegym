@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
-import { getWorkoutExercises, getSets, getExercise, getPRForExercise } from '../db'
+import { useState, useEffect, useRef } from 'react'
+import { getWorkoutExercises, getSets, getExercise, getPRForExercise, getUser } from '../db'
+import MuscleDiagram from '../components/MuscleDiagram'
 
 const MENSAJES_POSTWORKOUT = [
   '¡Entrenamiento completado! Otro día que marcas la diferencia.',
@@ -27,6 +28,26 @@ function getMensajePostWorkout(fechaFin) {
   return MENSAJES_POSTWORKOUT[idx]
 }
 
+function getMensajeDinamico(datos, fechaFin) {
+  const n = datos.prsNuevos.length
+  if (n >= 3) return `¡${n} récords personales en una sola sesión! Eso es historia. 🏆`
+  if (n === 2) return `¡Dos récords personales hoy! Estás en otra liga. 🏆🏆`
+  if (n === 1) return `¡Nuevo récord: ${datos.prsNuevos[0].nombre}! Sigue apretando. 🥇`
+  if (datos.seriesTotal >= 30) return `¡${datos.seriesTotal} series completadas! Sesión brutal. 🔥`
+  if (datos.seriesTotal >= 20) return `¡${datos.seriesTotal} series sin parar. Sin excusas. 💪`
+  if (datos.volumenTotal >= 5000) return `¡${(datos.volumenTotal / 1000).toFixed(1)} toneladas movidas hoy! 🚀`
+  return getMensajePostWorkout(fechaFin)
+}
+
+function getEquivalenciaVolumen(kg) {
+  if (!kg || kg < 100) return null
+  if (kg >= 5000) return `Es el peso de ${Math.round(kg / 4500)} elefante${kg >= 9000 ? 's' : ''} 🐘`
+  if (kg >= 2000) return `Es el peso de un auto familiar 🚗`
+  if (kg >= 1000) return `Más de 1 tonelada levantada 🏋️`
+  if (kg >= 500) return `Más de media tonelada levantada 💪`
+  return null
+}
+
 function formatDuracion(inicio, fin) {
   const s = Math.floor((new Date(fin) - new Date(inicio)) / 1000)
   const h = Math.floor(s / 3600)
@@ -47,19 +68,254 @@ function epley(peso, reps) {
   return peso * (1 + reps / 30)
 }
 
+function dibujarSlideCanvas(s) {
+  const W = 1080, H = 1920
+  const canvas = document.createElement('canvas')
+  canvas.width = W; canvas.height = H
+  const ctx = canvas.getContext('2d')
+
+  const bg = ctx.createLinearGradient(0, 0, W * 0.4, H)
+  bg.addColorStop(0, s.color1)
+  bg.addColorStop(1, s.color2)
+  ctx.fillStyle = bg
+  ctx.fillRect(0, 0, W, H)
+
+  const glow = ctx.createRadialGradient(W / 2, H * 0.36, 0, W / 2, H * 0.36, W * 0.7)
+  glow.addColorStop(0, s.accent + '44')
+  glow.addColorStop(1, 'rgba(0,0,0,0)')
+  ctx.fillStyle = glow
+  ctx.fillRect(0, 0, W, H)
+
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'alphabetic'
+
+  ctx.fillStyle = s.accent
+  ctx.font = 'bold 52px Arial, Helvetica, sans-serif'
+  ctx.fillText('VibeGym', W / 2, 128)
+
+  ctx.font = '180px serif'
+  ctx.fillText(s.emoji, W / 2, H * 0.37)
+
+  ctx.fillStyle = '#FFFFFF'
+  ctx.font = 'bold 76px Arial, Helvetica, sans-serif'
+  const words = s.titulo.split(' ')
+  let line = '', lineY = H * 0.52
+  for (const w of words) {
+    const test = line + w + ' '
+    if (ctx.measureText(test).width > W * 0.82 && line !== '') {
+      ctx.fillText(line.trim(), W / 2, lineY)
+      line = w + ' '; lineY += 94
+    } else { line = test }
+  }
+  ctx.fillText(line.trim(), W / 2, lineY)
+
+  ctx.fillStyle = 'rgba(255,255,255,0.52)'
+  ctx.font = '46px Arial, Helvetica, sans-serif'
+  ctx.fillText(s.subtitulo, W / 2, H * 0.7)
+
+  ctx.fillStyle = s.accent
+  ctx.font = 'bold 108px Arial, Helvetica, sans-serif'
+  ctx.fillText(s.stat, W / 2, H * 0.81)
+
+  if (s.statLabel) {
+    ctx.fillStyle = 'rgba(255,255,255,0.42)'
+    ctx.font = '46px Arial, Helvetica, sans-serif'
+    ctx.fillText(s.statLabel, W / 2, H * 0.87)
+  }
+
+  ctx.fillStyle = 'rgba(255,255,255,0.18)'
+  ctx.font = '38px Arial, Helvetica, sans-serif'
+  ctx.fillText('vibegym.app', W / 2, H - 88)
+
+  return canvas
+}
+
+function CompartirWrapped({ workout, datos, unidad = 'kg', onCerrar }) {
+  const [slide, setSlide] = useState(0)
+  const scrollRef = useRef(null)
+
+  const duracion = formatDuracion(workout.fechaInicio, workout.fechaFin)
+  const nombre = workout.nombre || 'Entrenamiento'
+  const fecha = new Date(workout.fechaFin || Date.now()).toLocaleDateString('es', {
+    weekday: 'long', day: 'numeric', month: 'long',
+  })
+
+  const slides = [
+    {
+      color1: '#0A1F10', color2: '#0D2E18',
+      accent: '#30D158',
+      emoji: '💪',
+      titulo: nombre,
+      subtitulo: fecha,
+      stat: duracion,
+      statLabel: 'de sesión',
+    },
+    {
+      color1: '#0D1A2E', color2: '#102040',
+      accent: '#0A84FF',
+      emoji: '🏋️',
+      titulo: datos.volumenTotal > 0 ? formatVolumen(datos.volumenTotal) : '—',
+      subtitulo: 'volumen levantado',
+      stat: `${datos.seriesTotal} series`,
+      statLabel: 'completadas',
+    },
+    ...(datos.prsNuevos.length > 0 ? [{
+      color1: '#1F1200', color2: '#3A2200',
+      accent: '#FF9500',
+      emoji: '🏆',
+      titulo: datos.prsNuevos.length === 1
+        ? datos.prsNuevos[0].nombre
+        : `${datos.prsNuevos.length} nuevos récords`,
+      subtitulo: datos.prsNuevos.length === 1
+        ? `${unidad === 'lb' ? +(datos.prsNuevos[0].peso * 2.205).toFixed(1) : datos.prsNuevos[0].peso}${unidad} × ${datos.prsNuevos[0].reps} reps`
+        : datos.prsNuevos.map(p => p.nombre).join(' · '),
+      stat: '¡Nuevo PR!',
+      statLabel: '',
+    }] : []),
+    {
+      color1: '#1A0A2E', color2: '#2A0D4A',
+      accent: '#BF5AF2',
+      emoji: '🎯',
+      titulo: `${datos.ejercicios.length} ejercicio${datos.ejercicios.length !== 1 ? 's' : ''}`,
+      subtitulo: datos.ejercicios.map(e => e.nombre).slice(0, 3).join(' · ') + (datos.ejercicios.length > 3 ? '...' : ''),
+      stat: nombre,
+      statLabel: 'completado 🔥',
+    },
+  ]
+
+  function guardarImagen() {
+    const s = slides[slide]
+    const canvas = dibujarSlideCanvas(s)
+    canvas.toBlob(async (blob) => {
+      if (!blob) return
+      const file = new File([blob], 'vibegym-sesion.png', { type: 'image/png' })
+      if (navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: 'Mi sesión en VibeGym' })
+          return
+        } catch (e) {
+          if (e.name === 'AbortError') return
+        }
+      }
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `vibegym-${Date.now()}.png`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    }, 'image/png')
+  }
+
+  function handleScroll(e) {
+    const idx = Math.round(e.target.scrollLeft / e.target.offsetWidth)
+    setSlide(idx)
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex flex-col bg-black"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
+      <div
+        className="shrink-0 flex items-center justify-between px-5 pb-3"
+        style={{ paddingTop: 'max(env(safe-area-inset-top), 16px)' }}
+      >
+        <button
+          onClick={onCerrar}
+          className="text-white/50 font-medium text-base active:opacity-70"
+        >
+          Cerrar
+        </button>
+        <div className="flex gap-1.5">
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              className="rounded-full transition-all"
+              style={{
+                width: i === slide ? 20 : 8,
+                height: 8,
+                backgroundColor: i === slide ? slides[i].accent : 'rgba(255,255,255,0.25)',
+              }}
+            />
+          ))}
+        </div>
+        <button
+          onClick={guardarImagen}
+          className="text-white font-semibold text-base active:opacity-70"
+        >
+          Compartir ↑
+        </button>
+      </div>
+
+      <div
+        ref={scrollRef}
+        className="flex-1 flex overflow-x-scroll"
+        style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+        onScroll={handleScroll}
+      >
+        {slides.map((s, i) => (
+          <div
+            key={i}
+            className="shrink-0 w-full h-full flex flex-col items-center justify-center px-8 text-center relative overflow-hidden"
+            style={{
+              scrollSnapAlign: 'start',
+              background: `linear-gradient(135deg, ${s.color1} 0%, ${s.color2} 100%)`,
+            }}
+          >
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: `radial-gradient(ellipse at 50% 38%, ${s.accent}30 0%, transparent 68%)` }}
+            />
+            <p className="font-bold text-sm tracking-widest uppercase mb-8 relative z-10" style={{ color: s.accent }}>
+              VibeGym
+            </p>
+            <p className="text-8xl mb-6 relative z-10">{s.emoji}</p>
+            <p className="font-bold text-white leading-tight relative z-10 mb-2" style={{ fontSize: 30 }}>
+              {s.titulo}
+            </p>
+            <p className="text-white/50 text-sm relative z-10 mb-10 px-4 leading-snug">
+              {s.subtitulo}
+            </p>
+            <p className="font-bold relative z-10" style={{ fontSize: 52, color: s.accent }}>
+              {s.stat}
+            </p>
+            {s.statLabel && (
+              <p className="text-white/40 text-sm mt-1 relative z-10">{s.statLabel}</p>
+            )}
+            <p className="absolute bottom-6 text-white/20 text-xs">vibegym.app</p>
+          </div>
+        ))}
+      </div>
+
+      <p className="shrink-0 text-white/30 text-xs text-center py-2">
+        Desliza para ver más · Toca Guardar para descargar
+      </p>
+    </div>
+  )
+}
+
 export default function ResumenWorkout({ workout, onGuardar }) {
   const [datos, setDatos] = useState(null)
+  const [mostrarWrapped, setMostrarWrapped] = useState(false)
+  const [unidad, setUnidad] = useState('kg')
 
   useEffect(() => {
     async function cargar() {
-      const wes = await getWorkoutExercises(workout.id)
+      const [user, wes] = await Promise.all([getUser(), getWorkoutExercises(workout.id)])
+      setUnidad(user?.unidad ?? 'kg')
       const ejercicios = []
       let volumenTotal = 0
       let seriesTotal = 0
       const prsNuevos = []
+      const todosMusculosPrimarios = []
+      const todosMusculosSecundarios = []
 
       for (const we of wes) {
         const ej = await getExercise(we.exerciseId)
+        if (ej?.musculoPrincipal) todosMusculosPrimarios.push(ej.musculoPrincipal)
+        if (ej?.musculosSecundarios?.length) todosMusculosSecundarios.push(...ej.musculosSecundarios)
         const sets = (await getSets(we.id))
           .filter(s => s.completada)
           .sort((a, b) => a.orden - b.orden)
@@ -92,7 +348,13 @@ export default function ResumenWorkout({ workout, onGuardar }) {
         }
       }
 
-      setDatos({ ejercicios, volumenTotal, seriesTotal, prsNuevos })
+      const musculosPrimUnicos = [...new Set(todosMusculosPrimarios)]
+      const musculosSecUnicos = [...new Set(todosMusculosSecundarios)].filter(m => !musculosPrimUnicos.includes(m))
+      setDatos({
+        ejercicios, volumenTotal, seriesTotal, prsNuevos,
+        musculoPrincipal: musculosPrimUnicos[0] ?? null,
+        musculosSecundarios: [...musculosPrimUnicos.slice(1), ...musculosSecUnicos],
+      })
     }
     cargar()
   }, [workout.id])
@@ -116,7 +378,7 @@ export default function ResumenWorkout({ workout, onGuardar }) {
         {/* Mensaje motivacional */}
         <div className="mx-4 mt-4 px-4 py-3 rounded-2xl" style={{ backgroundColor: '#30D15812' }}>
           <p className="text-[#30D158] text-sm font-medium text-center leading-snug">
-            {getMensajePostWorkout(workout.fechaFin)}
+            {datos ? getMensajeDinamico(datos, workout.fechaFin) : getMensajePostWorkout(workout.fechaFin)}
           </p>
         </div>
 
@@ -134,6 +396,27 @@ export default function ResumenWorkout({ workout, onGuardar }) {
           ))}
         </div>
 
+        {datos && getEquivalenciaVolumen(datos.volumenTotal) && (
+          <p className="text-[#636366] text-xs text-center mt-2 px-4">
+            {getEquivalenciaVolumen(datos.volumenTotal)}
+          </p>
+        )}
+
+        {/* Diagrama muscular */}
+        {datos?.musculoPrincipal && (
+          <div className="mx-4 mt-4 bg-[#1C1C1E] rounded-2xl overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#38383A]">
+              <p className="text-white font-semibold">Músculos trabajados</p>
+            </div>
+            <div className="flex items-center justify-center py-4 px-6" style={{ height: 220 }}>
+              <MuscleDiagram
+                musculoPrincipal={datos.musculoPrincipal}
+                musculosSecundarios={datos.musculosSecundarios ?? []}
+              />
+            </div>
+          </div>
+        )}
+
         {/* PRs nuevos */}
         {datos?.prsNuevos.length > 0 && (
           <div className="mx-4 mt-4 bg-[#1C1C1E] rounded-2xl overflow-hidden">
@@ -143,7 +426,7 @@ export default function ResumenWorkout({ workout, onGuardar }) {
             {datos.prsNuevos.map((pr, i) => (
               <div key={i} className="flex items-center justify-between px-4 py-3 border-t border-[#38383A] first:border-t-0 bg-[#30D158]/10">
                 <p className="text-[#30D158] font-medium text-sm">{pr.nombre}</p>
-                <p className="text-[#30D158] text-sm font-bold">{pr.peso}kg × {pr.reps}</p>
+                <p className="text-[#30D158] text-sm font-bold">{unidad === 'lb' ? +(pr.peso * 2.205).toFixed(1) : pr.peso}{unidad} × {pr.reps}</p>
               </div>
             ))}
           </div>
@@ -181,7 +464,18 @@ export default function ResumenWorkout({ workout, onGuardar }) {
 
       {/* Guardar como plantilla */}
       {datos && datos.ejercicios.length > 0 && (
-        <GuardarPlantillaInline onGuardar={onGuardar} />
+        <>
+          <div className="shrink-0 px-4 pt-3 bg-black">
+            <button
+              onClick={() => setMostrarWrapped(true)}
+              className="w-full bg-[#2C2C2E] text-white font-semibold text-base py-3.5 rounded-2xl active:opacity-70 flex items-center justify-center gap-2"
+            >
+              <span>🎉</span>
+              <span>Compartir sesión</span>
+            </button>
+          </div>
+          <GuardarPlantillaInline onGuardar={onGuardar} />
+        </>
       )}
 
       {/* Botón guardar simple si no hay datos */}
@@ -195,6 +489,14 @@ export default function ResumenWorkout({ workout, onGuardar }) {
             Guardar entrenamiento
           </button>
         </div>
+      )}
+      {mostrarWrapped && datos && (
+        <CompartirWrapped
+          workout={workout}
+          datos={datos}
+          unidad={unidad}
+          onCerrar={() => setMostrarWrapped(false)}
+        />
       )}
     </div>
   )
