@@ -1,15 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Squircle verde iOS -->
-  <rect width="512" height="512" rx="114" ry="114" fill="#30D158"/>
-  <!-- Mancuerna blanca centrada -->
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3EDF65"/>
+      <stop offset="100%" stop-color="#22A344"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo negro con esquinas iOS -->
+  <rect width="512" height="512" rx="116" fill="#000"/>
+
+  <!-- End cap izquierdo -->
+  <rect x="64"  y="228" width="22"  height="56"  rx="11" fill="url(#g)"/>
+  <!-- Plato exterior izquierdo -->
+  <rect x="86"  y="196" width="54"  height="120" rx="15" fill="url(#g)"/>
+  <!-- Plato interior izquierdo -->
+  <rect x="140" y="210" width="46"  height="92"  rx="12" fill="url(#g)"/>
   <!-- Barra central -->
-  <rect x="176" y="240" width="160" height="32" rx="16" fill="white"/>
-  <!-- Disco izq izq -->
-  <rect x="96" y="208" width="32" height="96" rx="14" fill="white"/>
-  <!-- Manga izq -->
-  <rect x="128" y="220" width="48" height="72" rx="10" fill="white"/>
-  <!-- Manga der -->
-  <rect x="336" y="220" width="48" height="72" rx="10" fill="white"/>
-  <!-- Disco der der -->
-  <rect x="384" y="208" width="32" height="96" rx="14" fill="white"/>
+  <rect x="186" y="240" width="140" height="32"  rx="11" fill="url(#g)"/>
+  <!-- Plato interior derecho -->
+  <rect x="326" y="210" width="46"  height="92"  rx="12" fill="url(#g)"/>
+  <!-- Plato exterior derecho -->
+  <rect x="372" y="196" width="54"  height="120" rx="15" fill="url(#g)"/>
+  <!-- End cap derecho -->
+  <rect x="426" y="228" width="22"  height="56"  rx="11" fill="url(#g)"/>
 </svg>
